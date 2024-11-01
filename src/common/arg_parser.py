@@ -11,8 +11,7 @@ class ArgParser:
   This class uses the argparse module to define and parse command-line arguments that are required for connecting to a
   Vault service. It provides default values for some of the parameters and allows for the addition of custom arguments.
 
-  Attributes:
-    parser (argparse.ArgumentParser): An instance of ArgumentParser to handle command-line arguments.
+  :param parser (argparse.ArgumentParser): An instance of ArgumentParser to handle command-line arguments.
   """
 
   def __init__(self):
@@ -43,7 +42,6 @@ class ArgParser:
     """
     Parses the command-line arguments.
 
-    Returns:
-      Namespace: An object containing the parsed arguments as attributes.
+    :return Namespace: An object containing the parsed arguments as attributes.
     """
     return self.parser.parse_args()
