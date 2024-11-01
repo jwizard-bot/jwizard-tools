@@ -13,10 +13,10 @@ well as standalone scripts used in various JWizard projects.
 
 ## Project modules
 
-| Name            | Description                                                       |
-|-----------------|-------------------------------------------------------------------|
-| py-deps-grabber | Parsing and persisting dependencies used in all JWizard projects. |
-| py-db-migrator  | TBD                                                               |
+| Name         | Description                                                       |
+|--------------|-------------------------------------------------------------------|
+| deps_grabber | Parsing and persisting dependencies used in all JWizard projects. |
+| db_migrator  | Database migrator, modifying structure and data via SQL files     |
 
 ## Clone and install
 
@@ -52,13 +52,13 @@ $ source .venv/bin/activate
 5. Install project-related dependencies via:
 
 ```bash
-$ (venv) pip install -r <project name>/requirements.txt --target=.venv/lib/<project name>
+$ (venv) pip install -r requirements.txt
 ```
 
 6. Run script via:
 
 ```bash
-$ (venv) PYTHONPATH=.venv/lib/<project name> python <project name>/main.py <arguments>
+$ (venv) python src/<project name>.py <arguments>
 ```
 
 Where `<project name>` is name of the project (defined in *name* column in **Project modules** table).
@@ -77,7 +77,7 @@ $ sudo chmod +x exec/run
 1. Prepare virtual environment and install dependencies via:
 
 ```bash
-$ exec/prepare <project name>
+$ exec/prepare
 ```
 
 2. Run via:
@@ -119,11 +119,11 @@ Where `<project name>` is name of the project (defined in *name* column in **Pro
   </tbody>
 </table>
 
-* For `py-deps-grabber` project:
+* For `deps_grabber` project:
 
 TBD
 
-* For `py-db-migrator` project:
+* For `db_migrator` project:
 
 TBD
 
