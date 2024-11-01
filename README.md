@@ -16,7 +16,7 @@ well as standalone scripts used in various JWizard projects.
 | Name         | Description                                                       |
 |--------------|-------------------------------------------------------------------|
 | deps_grabber | Parsing and persisting dependencies used in all JWizard projects. |
-| db_migrator  | Database migrator, modifying structure and data via SQL files     |
+| db_migrator  | Database migrator, modifying structure and data via SQL files.    |
 
 ## Clone and install
 
