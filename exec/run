@@ -1,0 +1,5 @@
+#!/bin/bash
+
+project_name=$1
+
+PYTHONPATH=.venv/lib/$project_name python3 $project_name/main.py "${@:2}"
