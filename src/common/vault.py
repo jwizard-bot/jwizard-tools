@@ -19,14 +19,16 @@ class VaultClient:
     :raises SystemExit: If connection or authentication to Vault server fails.
     """
     token = getenv("ENV_VAULT_TOKEN")
-    address = getenv("ENV_VAULT_ADDRESS", "http://localhost:8761")
+    address = getenv("JWIZARD_VAULT_SERVER", "http://localhost:8761")
     try:
       if token != None:
         self.client = Client(url=address, token=token)
       else:
         self.client = Client(url=address)
-        self.client.auth.userpass.login(username=getenv("ENV_VAULT_USERNAME"), password=getenv("ENV_VAULT_PASSWORD"))
-
+        self.client.auth.userpass.login(
+          username=getenv("JWIZARD_VAULT_USERNAME"),
+          password=getenv("JWIZARD_VAULT_PASSWORD"),
+        )
       self.client.secrets.kv.default_kv_version = 1
       info(f"Authenticated to Vault server.")
     except Exception as e:
