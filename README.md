@@ -13,10 +13,10 @@ well as standalone scripts used in various JWizard projects.
 
 ## Project modules
 
-| Name         | Description                                                       |
-|--------------|-------------------------------------------------------------------|
-| deps_grabber | Parsing and persisting dependencies used in all JWizard projects. |
-| db_migrator  | Database migrator, modifying structure and data via SQL files.    |
+| Name             | Description                                                    |
+|------------------|----------------------------------------------------------------|
+| packages_grabber | Parsing and persisting packages used in all JWizard projects.  |
+| db_migrator      | Database migrator, modifying structure and data via SQL files. |
 
 ## Clone and install
 
@@ -119,13 +119,38 @@ Where `<project name>` is name of the project (defined in *name* column in **Pro
   </tbody>
 </table>
 
-* For `deps_grabber` project:
+* For `packages_grabber` project:
 
-TBD
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>--repo</td>
+      <td>Yes</td>
+      <td>Github repository name from jwizard-bot organization.</td>
+    </tr>
+  </tbody>
+</table>
 
 * For `db_migrator` project:
 
-TBD
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
 
 ## License
 

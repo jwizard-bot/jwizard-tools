@@ -1,3 +1,7 @@
 requests==2.32.3
 toml==0.10.2
 hvac==2.3.0
+sqlalchemy==2.0.36
+pymysql==1.1.1
+cryptography==43.0.3
+pyfiglet==1.0.2
