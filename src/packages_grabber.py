@@ -30,7 +30,7 @@ def get_project_parser_provider(project_name: str):
     WHERE p.name = :project_name
   """)
   result = connection.execute(query, parameters={
-    "project_name": project_name
+    "project_name": project_name.split("/")[1],
   })
   row = result.fetchone()
   if row:
