@@ -18,9 +18,8 @@
   "psi-header.lang-config": [
     {
       "language": "python",
-      "begin": "#",
-      "prefix": "# ",
-      "end": "#",
+      "begin": "\"\"\"",
+      "end": "\"\"\"",
       "lineLength": 64
     }
   ],
