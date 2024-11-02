@@ -27,13 +27,19 @@ well as standalone scripts used in various JWizard projects.
 $ git clone https://github.com/jwizard-bot/jwizard-tools
 ```
 
-3. Prepare Python virtual environment via:
+3. Create `.env` file base `example.env` with following properties:
+
+```properties
+ENV_VAULT_TOKEN=<token>
+```
+
+4. Prepare Python virtual environment via:
 
 ```bash
 $ python -m venv .venv
 ```
 
-4. Activate environment via:
+5. Activate environment via:
 
 * for UNIX environments:
 
@@ -49,13 +55,13 @@ $ source .venv/bin/activate
 
 > NOTE: If you have an execution policy error, try execute `Set-ExecutionPolicy RemoteSigned` in PowerShell.
 
-5. Install project-related dependencies via:
+6. Install project-related dependencies via:
 
 ```bash
 $ (venv) pip install -r requirements.txt
 ```
 
-6. Run script via:
+7. Run script via:
 
 ```bash
 $ (venv) python src/<project name>.py <arguments>
@@ -89,35 +95,6 @@ $ exec/run <project name> <additional arguments>
 Where `<project name>` is name of the project (defined in *name* column in **Project modules** table).
 
 ## Project arguments
-
-* For all projects:
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>--vault-address</td>
-      <td>No, default: http://localhost:8761</td>
-      <td>Vault KV storage address.</td>
-    </tr>
-    <tr>
-      <td>--vault-token</td>
-      <td>Yes, if not authenticated as userpass.</td>
-      <td>Vault KV storage access token.</td>
-    </tr>
-    <tr>
-      <td rowspan="2">--vault-username, <br> --vault-password</td>
-      <td>Yes, if not authenticated as token.</td>
-      <td>Vault KV storage username and password.</td>
-    </tr>
-  </tbody>
-</table>
 
 * For `packages_grabber` project:
 

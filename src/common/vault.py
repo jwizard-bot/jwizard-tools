@@ -2,36 +2,31 @@
 Copyright (c) 2024 by JWizard
 Originally developed by Miłosz Gilga <https://miloszgilga.pl>
 """
+from os import getenv
 from hvac import Client
 from logging import info, error
 
 class VaultClient:
   """
   A client for interacting with HashiCorp Vault to retrieve secrets from key-value (KV) storage.
-
-  :param args: Dictionary containing the Vault connection parameters.
-    Expected keys:
-      - vault_address (str): The Vault server's address.
-      - vault_token (str, optional): The Vault token for authentication.
-      - vault_username (str, optional): The Vault username for userpass authentication.
-      - vault_password (str, optional): The Vault password for userpass authentication.
   """
 
-  def __init__(self, args: dict):
+  def __init__(self):
     """
     Initializes the Vault client, attempting authentication with the provided arguments.
     Tries token-based authentication first if a token is provided, else falls back to username-password authentication.
 
-    :param args: A dictionary with required and optional authentication details.
     :raises SystemExit: If connection or authentication to Vault server fails.
     """
+    token = getenv("ENV_VAULT_TOKEN")
+    address = getenv("ENV_VAULT_ADDRESS", "http://localhost:8761")
     try:
-      if args.vault_token != None:
-        self.client = Client(url=args.vault_address, token=args.vault_token)
+      if token != None:
+        self.client = Client(url=address, token=token)
         self.client.secrets.kv.default_kv_version = 1
       else:
-        self.client = Client(url=args.vault_address)
-        self.client.auth_userpass(args.vault_username, args.vault_password)
+        self.client = Client(url=address)
+        self.client.auth_userpass(username=getenv("ENV_VAULT_USERNAME"), password=getenv("ENV_VAULT_PASSWORD"))
     
       info(f"Authenticated to Vault server.")
     except Exception as e:

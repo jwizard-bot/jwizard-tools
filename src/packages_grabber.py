@@ -4,12 +4,15 @@ Originally developed by Miłosz Gilga <https://miloszgilga.pl>
 """
 from sqlalchemy import text
 from logging import info, error
+from argparse import ArgumentParser
+from dotenv import load_dotenv
 from common.logger import *
 from common.header import print_header
 from common.vault import VaultClient
-from common.arg_parser import ArgParser
 from common.db import Db
 from packages_grabber.packages_extractor import GradlePackagesExtractor, NodePackagesExtractor
+
+load_dotenv()
 
 def get_project_parser_provider(project_name: str):
   """
@@ -120,11 +123,11 @@ def drop_packages(packages: list[str], project_id: int) -> int:
 if __name__ == '__main__':
   print_header(initiator=__file__)
 
-  arg_parser = ArgParser()
+  arg_parser = ArgumentParser()
   arg_parser.add_argument("--repo", type=str, required=True)
-  args = arg_parser.get_args()
+  args = arg_parser.parse_args()
 
-  vault_client = VaultClient(args)
+  vault_client = VaultClient()
   secrets = vault_client.get_secrets(kv_backend="jwizard", path="common")
 
   db = Db(
