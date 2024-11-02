@@ -35,7 +35,6 @@ class PackagesExtractor(ABC):
     :param file_path: The path to the packages file.
     :type file_path: str
     """
-    self.org_name = "jwizard-bot"
     self.repo_name = repo_name
     self.branch = branch
     self.file_path = file_path
@@ -50,7 +49,7 @@ class PackagesExtractor(ABC):
     :rtype: str
     :raises SystemExit: If the request fails with a non-200 status code.
     """
-    url = f"https://raw.githubusercontent.com/{self.org_name}/{self.repo_name}/{self.branch}/{self.file_path}"
+    url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}/{self.file_path}"
     response = request_get(url)
     if response.status_code != 200:
       error(f"Unable to find packages file. Stopping pipeline.")

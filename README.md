@@ -133,7 +133,7 @@ Where `<project name>` is name of the project (defined in *name* column in **Pro
     <tr>
       <td>--repo</td>
       <td>Yes</td>
-      <td>Github repository name from jwizard-bot organization.</td>
+      <td>Github repository name and organization: owner/name.</td>
     </tr>
   </tbody>
 </table>
