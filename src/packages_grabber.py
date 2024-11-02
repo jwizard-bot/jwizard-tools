@@ -107,17 +107,35 @@ def persist_packages(packages: list[str], project_id: int) -> int:
   :return: The number of rows affected by the insert.
   :rtype: int
   """
+  if not packages:
+    return 0
   values = ','.join(f"('{name}',{project_id})" for name in packages)
   query = text(f"INSERT INTO project_packages (name, project_id) VALUES {values}")
-  return connection.execute(query)
+  result = connection.execute(query)
+  return result.rowcount
 
 
 def drop_packages(packages: list[str], project_id: int) -> int:
+  """
+  Deletes specified packages from the project_packages table in the database.
+
+  :param packages: A list of package names to be removed.
+  :type packages: list[str]
+
+  :param project_id: The ID of the project from which the packages should be deleted.
+  :type project_id: int
+
+  :return: The number of rows affected (i.e., the number of packages deleted).
+  :rtype: int
+  """
+  if not packages:
+    return 0
   query = text(f"DELETE FROM project_packages WHERE project_id = :project_id AND name IN :names")
-  return connection.execute(query, parameters={
+  result = connection.execute(query, parameters={
     "project_id": project_id,
     "names": tuple(packages),
   })
+  return result.rowcount
 
 
 if __name__ == '__main__':
@@ -156,12 +174,12 @@ if __name__ == '__main__':
 
       persisted_in_db = persist_packages(to_persist, project_id)
       dropped_from_db = drop_packages(to_drop, project_id)
-      connection.commit()
 
       update_file_md5(extractor.file_md5, project_id)
       info(f"Lock file with MD5: {extractor.file_md5}.")
 
-      info(f"Persisted: {persisted_in_db.rowcount} packages, dropped: {dropped_from_db.rowcount} packages.")
+      connection.commit()
+      info(f"Persisted: {persisted_in_db} packages, dropped: {dropped_from_db} packages.")
 
     except Exception as ex:
       connection.rollback()
