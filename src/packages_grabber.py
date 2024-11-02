@@ -184,5 +184,6 @@ if __name__ == '__main__':
     except Exception as ex:
       connection.rollback()
       error(f"Unable to execute action. Cause: {ex}.")
+      exit(1)
 
   info("Finished.")
