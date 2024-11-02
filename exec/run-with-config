@@ -2,6 +2,13 @@
 
 project_name=$1
 env_variables=$2
+rest_variables=${@:3}
 
-export $(echo -e "$env_variables" | tr '\n\r' ' ')
-python3 src/$project_name.py "${@:3}"
+env_variables=$(echo -e "$env_variables" | tr '\n\r' ' ')
+
+IFS=' ' read -r -a env_array <<< "$env_variables"
+for var in "${env_array[@]}"; do
+  export "$var"
+done
+
+python3 src/$project_name.py $rest_variables
