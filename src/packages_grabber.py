@@ -25,8 +25,8 @@ def get_project_parser_provider(project_name: str):
   :rtype: tuple[int | None, str | None, str | None]
   """
   query = text("""
-    SELECT p.id, p.file_md5, ps.name FROM parsers ps
-    INNER JOIN projects p ON p.parser_id = ps.id
+    SELECT p.id, p.file_md5, ps.name FROM package_parsers ps
+    INNER JOIN package_projects p ON p.parser_id = ps.id
     WHERE p.name = :project_name
   """)
   result = connection.execute(query, parameters={
@@ -70,7 +70,7 @@ def update_file_md5(file_md5: str, project_id: int):
   :param project_id: The ID of the project to update.
   :type project_id: int
   """
-  query = text("UPDATE projects SET file_md5 = :file_md5 WHERE id = :project_id")
+  query = text("UPDATE package_projects SET file_md5 = :file_md5 WHERE id = :project_id")
   connection.execute(query, parameters={
     "file_md5": file_md5,
     "project_id": project_id,
