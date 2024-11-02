@@ -23,14 +23,14 @@ class VaultClient:
     try:
       if token != None:
         self.client = Client(url=address, token=token)
-        self.client.secrets.kv.default_kv_version = 1
       else:
         self.client = Client(url=address)
-        self.client.auth_userpass(username=getenv("ENV_VAULT_USERNAME"), password=getenv("ENV_VAULT_PASSWORD"))
-    
+        self.client.auth.userpass.login(username=getenv("ENV_VAULT_USERNAME"), password=getenv("ENV_VAULT_PASSWORD"))
+
+      self.client.secrets.kv.default_kv_version = 1
       info(f"Authenticated to Vault server.")
     except Exception as e:
-      error(f"Unable authenticate to Vault server. Cause: {e}.")
+      error(f"Unable authenticate to Vault server.")
       info("Finished.")
       exit(1)
 
