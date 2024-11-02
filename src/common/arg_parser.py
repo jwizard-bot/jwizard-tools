@@ -3,6 +3,7 @@
 # Originally developed by Miłosz Gilga <https://miloszgilga.pl>
 #
 import argparse
+from typing import Type, Any
 
 class ArgParser:
   """
@@ -32,11 +33,11 @@ class ArgParser:
     self.parser.add_argument("--vault-username", type=str, required=False)
     self.parser.add_argument("--vault-password", type=str, required=False)
   
-  def add_argument(self, key, type, required, default=None):
+  def add_argument(self, name: str, type: Type[Any], required: bool, default=None):
     """
     Adds a custom argument to the parser.
     """
-    self.parser.add_argument(key, type, required, default)
+    self.parser.add_argument(name, type=type, required=required, default=default)
 
   def get_args(self):
     """

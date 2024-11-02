@@ -14,7 +14,7 @@ class VaultClient:
   :param client (hvac.Client): An instance of the hvac.Client used to interact with the Vault server.
   """
 
-  def __init__(self, args):
+  def __init__(self, args: dict):
     """
     Initializes the VaultClient instance. Attempts to authenticate with the Vault server using either a token or
     user/pass credentials.
@@ -33,7 +33,7 @@ class VaultClient:
       print(f"Unable login to Vault server: \"{args.vault_address}\". Cause: {e}.")
       exit(1)
 
-  def get_secrets(self, kv_backend, path):
+  def get_secrets(self, kv_backend: str, path: str):
     """
     Retrieves secrets from the specified Key-Value (KV) backend.
 
