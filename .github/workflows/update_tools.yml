@@ -1,0 +1,41 @@
+name: Update packages and cache version of JWizard Tools
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/**"
+      - "exec/**"
+      - "src/**"
+      - "requirements.txt"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Grand permissions to run packages grabber
+        run: chmod +x exec/run-with-config
+
+      - name: Cache version
+        run: exec/run-with-config cache_version \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
+
+      - name: Run packages grabber
+        run: exec/run-with-config packages_grabber \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
