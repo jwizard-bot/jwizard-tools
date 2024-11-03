@@ -136,8 +136,7 @@ class GradlePackagesExtractor(PackagesExtractor):
       return
     for _, details in parsed_content["libraries"].items():
       if "module" in details:
-        module_name = details["module"].split(":")[-1]
-        self.packages.append(module_name.lower().replace(".", "-"))
+        self.packages.append(details["module"].lower())
 
 
 class NodePackagesExtractor(PackagesExtractor):
