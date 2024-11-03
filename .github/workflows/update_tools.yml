@@ -11,7 +11,7 @@ on:
       - "requirements.txt"
 
 jobs:
-  build:
+  run-tools:
     runs-on: ubuntu-latest
 
     steps:
