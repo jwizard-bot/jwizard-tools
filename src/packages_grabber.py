@@ -10,7 +10,11 @@ from common.logger import *
 from common.header import print_header
 from common.vault import VaultClient
 from common.db import Db
-from packages_grabber.packages_extractor import GradlePackagesExtractor, NodePackagesExtractor
+from packages_grabber.packages_extractor import (
+  GradlePackagesExtractor,
+  NodePackagesExtractor,
+  PipPackagesExtractor,
+)
 
 load_dotenv()
 
@@ -40,23 +44,25 @@ def get_project_parser_provider(repo: str):
 
 def determinate_extractor(parser_provider: str):
   """
-  Determines the dependency extractor based on the parser provider.
+  Determines the appropriate extractor class based on the parser provider.
 
-  :param parser_provider: The parser provider (ex. "gradle" or "node").
+  :param parser_provider: The name of the package parser provider.
   :type parser_provider: str
 
-  :return: An instance of GradlePackagesExtractor or NodePackagesExtractor, or None if provider is unknown.
-  :rtype: GradlePackagesExtractor | NodePackagesExtractor | None
+  :return: An instance of the appropriate package extractor.
+  :rtype: PackagesExtractor
   """
-  extractor = None
-  if parser_provider == "gradle":
-    extractor = GradlePackagesExtractor(repo_name=args.repo, branch="master")
-  elif provider == "node":
-    extractor = NodePackagesExtractor(repo_name=args.repo, branch="master")
-  else:
+  extractors = {
+    "gradle": GradlePackagesExtractor,
+    "node": NodePackagesExtractor,
+    "pip": PipPackagesExtractor,
+  } 
+  extractor = extractors.get(parser_provider, None)(repo_name=args.repo, branch="master")
+  if not extractor:
     error(f"Unexpected provider: {parser_provider}.")
     info("Finished.")
     exit(0)
+
   return extractor
 
 
