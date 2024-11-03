@@ -39,7 +39,7 @@ class PackagesExtractor(ABC):
     self.branch = branch
     self.file_path = file_path
     self.packages = []
-    self.file_md5 = None
+    self.packages_md5 = None
 
   def _fetch_raw_content(self) -> str:
     """
@@ -68,10 +68,10 @@ class PackagesExtractor(ABC):
     :type db_md5: str | None
     """
     raw_content = self._fetch_raw_content()
-    self.file_md5 = self._calculate_md5(raw_content)
-    info(f"Calculated incoming MD5: {self.file_md5}, persisted MD5: {db_md5}.")
+    self.packages_md5 = self._calculate_md5(raw_content)
+    info(f"Calculated incoming MD5: {self.packages_md5}, persisted MD5: {db_md5}.")
 
-    if self.file_md5 == db_md5:
+    if self.packages_md5 == db_md5:
       info(f"Packages file for: {self.repo_name} has no changes. Skipping.")
       info("Finished.")
       exit(0)

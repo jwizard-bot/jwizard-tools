@@ -14,23 +14,23 @@ from packages_grabber.packages_extractor import GradlePackagesExtractor, NodePac
 
 load_dotenv()
 
-def get_project_parser_provider(project_name: str):
+def get_project_parser_provider(repo: str):
   """
   Retrieves the project ID, current MD5 hash of the dependency file, and the parser provider name for a given project.
 
-  :param project_name: The name of the project to fetch.
-  :type project_name: str
+  :param repo: The name of the repository to fetch.
+  :type repo: str
 
-  :return: A tuple containing the project ID, file MD5 hash, and parser provider name, or None for each if not found.
+  :return: A tuple containing the project ID, packages MD5 hash, and parser provider name, or None for each if not found.
   :rtype: tuple[int | None, str | None, str | None]
   """
   query = text("""
-    SELECT p.id, p.file_md5, ps.name FROM package_parsers ps
-    INNER JOIN package_projects p ON p.parser_id = ps.id
+    SELECT p.id, p.packages_md5, ps.name FROM package_parsers ps
+    INNER JOIN projects p ON p.parser_id = ps.id
     WHERE p.name = :project_name
   """)
   result = connection.execute(query, parameters={
-    "project_name": project_name.split("/")[1],
+    "project_name": repo.split("/")[1],
   })
   row = result.fetchone()
   if row:
@@ -60,19 +60,19 @@ def determinate_extractor(parser_provider: str):
   return extractor
 
 
-def update_file_md5(file_md5: str, project_id: int):
+def update_packages_md5(packages_md5: str, project_id: int):
   """
   Updates the MD5 hash of the dependency file in the database.
 
-  :param file_md5: The new MD5 hash of the dependency file.
-  :type file_md5: str
+  :param packages_md5: The new MD5 hash of the dependency file.
+  :type packages_md5: str
 
   :param project_id: The ID of the project to update.
   :type project_id: int
   """
-  query = text("UPDATE package_projects SET file_md5 = :file_md5 WHERE id = :project_id")
+  query = text("UPDATE projects SET packages_md5 = :packages_md5 WHERE id = :project_id")
   connection.execute(query, parameters={
-    "file_md5": file_md5,
+    "packages_md5": packages_md5,
     "project_id": project_id,
   })
 
@@ -156,9 +156,9 @@ if __name__ == '__main__':
   )
   with db.engine.connect() as connection:
     try:
-      project_id, file_md5, provider = get_project_parser_provider(args.repo)
+      project_id, packages_md5, provider = get_project_parser_provider(args.repo)
       extractor = determinate_extractor(provider)
-      extractor.extract_and_parse(file_md5)
+      extractor.extract_and_parse(packages_md5)
 
       persisted = find_already_persisted_packages(project_id)
       to_persist = list(set(extractor.packages) - set(persisted))
@@ -175,8 +175,8 @@ if __name__ == '__main__':
       persisted_in_db = persist_packages(to_persist, project_id)
       dropped_from_db = drop_packages(to_drop, project_id)
 
-      update_file_md5(extractor.file_md5, project_id)
-      info(f"Lock file with MD5: {extractor.file_md5}.")
+      update_packages_md5(extractor.packages_md5, project_id)
+      info(f"Lock file with MD5: {extractor.packages_md5}.")
 
       connection.commit()
       info(f"Persisted: {persisted_in_db} packages, dropped: {dropped_from_db} packages.")
