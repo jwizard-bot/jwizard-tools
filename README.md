@@ -28,7 +28,7 @@ well as standalone scripts used in various JWizard projects.
 $ git clone https://github.com/jwizard-bot/jwizard-tools
 ```
 
-3. Create `.env` file base `example.env` with following properties:
+3. Create `.env` file based `example.env` with following properties:
 
 ```properties
 ENV_VAULT_TOKEN=<token>
