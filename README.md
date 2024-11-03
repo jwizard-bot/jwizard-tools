@@ -17,6 +17,7 @@ well as standalone scripts used in various JWizard projects.
 |------------------|----------------------------------------------------------------|
 | packages_grabber | Parsing and persisting packages used in all JWizard projects.  |
 | db_migrator      | Database migrator, modifying structure and data via SQL files. |
+| cache_version    | Update deployment cache (project version and time) in DB.      |
 
 ## Clone and install
 
@@ -54,6 +55,9 @@ $ source .venv/bin/activate
 ```
 
 > NOTE: If you have an execution policy error, try execute `Set-ExecutionPolicy RemoteSigned` in PowerShell.
+
+> NOTE: If you don't have `bin` directory, change path to `.venv/Scripts/activate` and `.\.venv\Scripts\Activate.ps1`
+> for UNIX and Windows environments respectively.
 
 6. Install project-related dependencies via:
 
@@ -98,36 +102,20 @@ Where `<project name>` is name of the project (defined in *name* column in **Pro
 
 * For `packages_grabber` project:
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>--repo</td>
-      <td>Yes</td>
-      <td>Github repository name and organization: owner/name.</td>
-    </tr>
-  </tbody>
-</table>
+```properties
+--repo  (required)  # Github repository name and organization: owner/name.
+```
 
 * For `db_migrator` project:
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+TBD
+
+* For `cache_version` project:
+
+
+```properties
+--repo  (required)  # Github repository name and organization: owner/name.
+```
 
 ## License
 
