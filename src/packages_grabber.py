@@ -10,11 +10,9 @@ from common.logger import *
 from common.header import print_header
 from common.vault import VaultClient
 from common.db import Db
-from packages_grabber.packages_extractor import (
-  GradlePackagesExtractor,
-  NodePackagesExtractor,
-  PipPackagesExtractor,
-)
+from packages_grabber.gradle_extractor import GradlePackagesExtractor
+from packages_grabber.node_extractor import NodePackagesExtractor
+from packages_grabber.pip_extractor import PipPackagesExtractor
 
 load_dotenv()
 
