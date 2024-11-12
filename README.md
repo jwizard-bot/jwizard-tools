@@ -102,19 +102,21 @@ Where `<project name>` is name of the project (defined in *name* column in **Pro
 
 * For `packages_grabber` project:
 
-```properties
---repo  (required)  # Github repository name and organization: owner/name.
+```js
+--repo (required) // Github repository name and organization: owner/name.
 ```
 
 * For `db_migrator` project:
 
-TBD
+```js
+--pipeline (required) // Determine from which directory migrator execute migrations (take: 'infra' and 'self').
+                      // Used for separate migration executions for JWizard Tools and JWizard Infra (Core and API).
+```
 
 * For `cache_version` project:
 
-
-```properties
---repo  (required)  # Github repository name and organization: owner/name.
+```js
+--repo (required) // Github repository name and organization: owner/name.
 ```
 
 ## License

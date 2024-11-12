@@ -40,7 +40,7 @@ class PackagesExtractor(ABC):
     self.packages = []
     self.packages_md5 = None
 
-  def _fetch_raw_content(self) -> str:
+  def __fetch_raw_content(self) -> str:
     """
     Fetches the raw content of the packages file from the GitHub repository.
 
@@ -66,19 +66,19 @@ class PackagesExtractor(ABC):
     :param db_md5: The MD5 hash of the current database content to compare against.
     :type db_md5: str | None
     """
-    raw_content = self._fetch_raw_content()
-    self.packages_md5 = self._calculate_md5(raw_content)
-    info(f"Calculated incoming MD5: {self.packages_md5}, persisted MD5: {db_md5}.")
+    raw_content = self.__fetch_raw_content()
+    self.packages_md5 = self.__calculate_md5(raw_content)
+    info(f"Calculated incoming MD5: \"{self.packages_md5}\", persisted MD5: \"{db_md5}\".")
 
     if self.packages_md5 == db_md5:
-      info(f"Packages file for: {self.repo_name} has no changes. Skipping.")
+      info(f"Packages file for: \"{self.repo_name}\" has no changes. Skipping.")
       info("Finished.")
       exit(0)
 
     self._extract_packages(raw_content)
-    info(f"Parsed: {len(self.packages)} libraries from: {self.repo_name} repository.")
+    info(f"Parsed: {len(self.packages)} libraries from: \"{self.repo_name}\" repository.")
 
-  def _calculate_md5(self, raw_content) -> str:
+  def __calculate_md5(self, raw_content) -> str:
     """
     Calculates the MD5 hash of the provided raw content.
 
