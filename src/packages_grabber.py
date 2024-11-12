@@ -158,7 +158,7 @@ if __name__ == '__main__':
     password=secrets["V_MYSQL_PASSWORD"],
     db_name=secrets["V_MYSQL_DB_NAME"],
   )
-  with db.engine.connect() as connection:
+  with db.engine.begin() as connection:
     try:
       project_id, packages_md5, provider = get_project_parser_provider(args.repo)
       extractor = determinate_extractor(provider)
