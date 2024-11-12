@@ -1,0 +1,59 @@
+author: milosz08
+
+sql: |
+  CREATE TABLE IF NOT EXISTS guilds (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    discord_id BIGINT NOT NULL UNIQUE,
+    legacy_prefix VARCHAR(5),
+    music_text_channel_id BIGINT,
+    language VARCHAR(5) NOT NULL,
+    dj_role_name VARCHAR(100),
+    slash_enabled BOOLEAN,
+    leave_empty_channel_sec BIGINT,
+    leave_no_tracks_channel_sec BIGINT,
+    voting_percentage_ratio INT,
+    time_to_finish_voting_sec BIGINT,
+    random_auto_choose_track BOOLEAN,
+    tracks_to_choose_max INT,
+    time_after_auto_choose_sec BIGINT,
+    min_repeats_of_track INT,
+    max_repeats_of_track INT,
+    player_volume INT,
+    suppress_response_notifications BOOLEAN,
+
+    PRIMARY KEY (id)
+  )
+  ENGINE=InnoDB;
+
+  CREATE TABLE IF NOT EXISTS guilds_disabled_commands (
+    guild_id BIGINT UNSIGNED NOT NULL,
+    command_id BIGINT NOT NULL,
+    prefix_disabled BOOLEAN NOT NULL DEFAULT TRUE,
+    slash_disabled BOOLEAN NOT NULL DEFAULT TRUE,
+
+    FOREIGN KEY (guild_id) REFERENCES guilds(id) ON UPDATE CASCADE ON DELETE CASCADE
+  )
+  ENGINE=InnoDB;
+
+  CREATE TABLE IF NOT EXISTS guilds_disabled_modules (
+    guild_id BIGINT UNSIGNED NOT NULL,
+    module_id BIGINT NOT NULL,
+
+    FOREIGN KEY (guild_id) REFERENCES guilds(id) ON UPDATE CASCADE ON DELETE CASCADE
+  )
+  ENGINE=InnoDB;
+
+  CREATE TABLE IF NOT EXISTS guilds_disabled_radio_stations (
+    guild_id BIGINT UNSIGNED NOT NULL,
+    radio_station_id BIGINT NOT NULL,
+
+    FOREIGN KEY (guild_id) REFERENCES guilds(id) ON UPDATE CASCADE ON DELETE CASCADE
+  )
+  ENGINE=InnoDB;
+
+rollback: |
+  DROP TABLE IF EXISTS guilds;
+  DROP TABLE IF EXISTS guilds_disabled_commands;
+  DROP TABLE IF EXISTS guilds_disabled_modules;
+  DROP TABLE IF EXISTS guilds_disabled_radio_stations;

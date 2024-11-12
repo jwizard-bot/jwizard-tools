@@ -1,0 +1,31 @@
+author: milosz08
+
+sql: |
+  CREATE TABLE IF NOT EXISTS track_lists (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    name VARCHAR(255) NOT NULL,
+    private BOOLEAN NOT NULL DEFAULT TRUE,
+    member_id BIGINT NOT NULL,
+    guild_id BIGINT UNSIGNED,
+
+    FOREIGN KEY (guild_id) REFERENCES guilds(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    PRIMARY KEY (id)
+  )
+  ENGINE=InnoDB;
+
+  CREATE TABLE IF NOT EXISTS track_list_positions (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    name VARCHAR(255) NOT NULL,
+    query VARCHAR(500) NOT NULL,
+    track_list_id BIGINT UNSIGNED NOT NULL,
+
+    FOREIGN KEY (track_list_id) REFERENCES track_lists(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (id)
+  )
+  ENGINE=InnoDB;
+
+rollback: |
+  DROP TABLE IF EXISTS track_lists;
+  DROP TABLE IF EXISTS track_list_positions;

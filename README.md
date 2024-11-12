@@ -8,16 +8,17 @@ well as standalone scripts used in various JWizard projects.
 
 * [Project modules](#project-modules)
 * [Clone and install](#clone-and-install)
+* [Create migration](#create-migration)
 * [Project arguments](#project-arguments)
 * [License](#license)
 
 ## Project modules
 
-| Name             | Description                                                    |
-|------------------|----------------------------------------------------------------|
-| packages_grabber | Parsing and persisting packages used in all JWizard projects.  |
-| db_migrator      | Database migrator, modifying structure and data via SQL files. |
-| cache_version    | Update deployment cache (project version and time) in DB.      |
+| Name             | Description                                                                                |
+|------------------|--------------------------------------------------------------------------------------------|
+| packages_grabber | Parsing and persisting packages used in all JWizard projects.                              |
+| db_migrator      | Database migrator framework, modifying structure and data via YAML files with SQL content. |
+| cache_version    | Update deployment cache (project version and time) in DB.                                  |
 
 ## Clone and install
 
@@ -97,6 +98,22 @@ $ exec/run <project name> <additional arguments>
 ```
 
 Where `<project name>` is name of the project (defined in *name* column in **Project modules** table).
+
+## Create migration
+
+To create migration template file (in UNIX environments), type:
+
+```bash
+$ sudo chmod +x exec/create-migration
+$ exec/create-migration <migration name> <pipeline> <author>
+```
+where:
+* `<migration name>` is the self descriptive name of the migration file,
+* `<pipeline>` is one of the migration base directory (see `--pipeline` argument for `db_migrator` project),
+* `<author` is migration author persisted in DB. By default, gets author from git property `user.name`. Not required.
+
+This script will automatically created new migration template with current date, incremented migration number and base
+migration script copied from `migrations/template.yml` file.
 
 ## Project arguments
 

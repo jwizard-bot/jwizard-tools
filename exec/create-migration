@@ -1,0 +1,46 @@
+#!/bin/bash
+
+name=$1
+pipeline=$2
+author=$3
+
+if [[ -z "$author" ]]; then
+  author=$(git config user.name)
+
+  if [[ -z "$author" ]]; then
+    echo "Error: Author name not provided and Git username is not set. Please provide a contributor."
+    exit 1
+  fi
+fi
+
+if [[ "$pipeline" != "infra" && "$pipeline" != "self" ]]; then
+  echo "Error. Incorrect pipeline name. Take only: \"infra\" and \"self\"."
+  exit 1
+fi
+
+base_dir="migrations"
+working_dir="$base_dir/$pipeline"
+template_file="$base_dir/template.yml"
+
+if [[ ! -d "$working_dir" ]]; then
+  echo "Directory \"$working_dir\" does not exist. Creating it."
+  mkdir -p "$working_dir"
+fi
+
+echo "Creating migration script in \"$working_dir\" directory."
+
+num=$(ls "$working_dir" | grep -E '^[0-9]{2}-[0-9]{2}-[0-9]{4}_[0-9]{5}_.+\.yml$' |
+      sed -E 's/^[0-9]{2}-[0-9]{2}-[0-9]{4}_([0-9]{5})_.+\.yml$/\1/' |
+      sort -n | tail -n 1)
+
+if [[ -z "$num" ]]; then
+  new_number="00000"
+else
+  new_number=$(printf "%05d" $((10#$num + 1)))
+fi
+
+current_date=$(date +"%d-%m-%Y")
+new_file="${current_date}_${new_number}_${name}.yml"
+
+sed "s/<github nick or full name>/$author/" "$template_file" > "$working_dir/$new_file"
+echo "Created new migration file: \"$working_dir/$new_file\"."

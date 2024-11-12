@@ -1,0 +1,24 @@
+author: milosz08
+
+sql: |
+  CREATE TABLE IF NOT EXISTS key_features (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    name VARCHAR(50) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    PRIMARY KEY (id)
+  )
+  ENGINE=InnoDB;
+
+  INSERT INTO key_features (id, name, is_active) VALUES
+  (1, 'commands', TRUE),
+  (2, 'audioPlayer', TRUE),
+  (3, 'radioSource', TRUE),
+  (4, 'votingSystem', FALSE),
+  (5, 'remotePlayback', FALSE),
+  (6, 'playlists', FALSE),
+  (7, 'management', FALSE);
+
+rollback: |
+  DROP TABLE IF EXISTS key_features;
