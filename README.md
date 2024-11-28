@@ -55,7 +55,8 @@ $ source .venv/bin/activate
 .\.venv\bin\Activate.ps1
 ```
 
-> NOTE: If you have an execution policy error, try execute `Set-ExecutionPolicy RemoteSigned` in PowerShell.
+> NOTE: If you have an execution policy error, try execute
+> `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser` in PowerShell.
 
 > NOTE: If you don't have `bin` directory, change path to `.venv/Scripts/activate` and `.\.venv\Scripts\Activate.ps1`
 > for UNIX and Windows environments respectively.
@@ -120,7 +121,7 @@ migration script copied from `migrations/template.yml` file.
 * For `packages_grabber` project:
 
 ```js
---repo (required) // Github repository name and organization: owner/name.
+--repo (required)     // Github repository name and organization: owner/name.
 ```
 
 * For `db_migrator` project:
@@ -133,7 +134,7 @@ migration script copied from `migrations/template.yml` file.
 * For `cache_version` project:
 
 ```js
---repo (required) // Github repository name and organization: owner/name.
+--repo (required)     // Github repository name and organization: owner/name.
 ```
 
 ## License
