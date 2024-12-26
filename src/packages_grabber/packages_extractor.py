@@ -5,6 +5,7 @@ Originally developed by Miłosz Gilga <https://miloszgilga.pl>
 from requests import get as request_get
 from logging import info, error
 from hashlib import md5
+from sqlalchemy import Connection, text
 from abc import ABC, abstractmethod
 
 class PackagesExtractor(ABC):
@@ -39,6 +40,7 @@ class PackagesExtractor(ABC):
     self.file_path = file_path
     self.packages = []
     self.packages_md5 = None
+    self.base_url = None
 
   def _fetch_raw_content(self) -> str:
     """
@@ -92,6 +94,23 @@ class PackagesExtractor(ABC):
     hash_obj.update(raw_content.encode('utf-8'))
     return hash_obj.hexdigest()
 
+  def find_base_url(self, connection: Connection, parser_name: str):
+    """
+    Determines the base URL for a given parser by querying the database.
+
+    :param connection: The database connection object used to execute the query.
+    :type connection: Connection
+
+    :param parser_name: The name of the parser for which to retrieve the base URL.
+    :type parser_name: str
+    """
+    query = text("SELECT base_url FROM package_parsers WHERE name = :parser_name");
+    result = connection.execute(query, parameters={
+      "parser_name": parser_name,
+    })
+    self.base_url = result.scalar()
+    info(f"Determinate base url: \"{self.base_url}\" for package parser: \"{parser_name}\".")
+
   @abstractmethod
   def _extract_packages(raw_format: str):
     """
@@ -100,5 +119,19 @@ class PackagesExtractor(ABC):
 
     :param raw_format: The raw content to extract packages from.
     :type raw_format: str
+    """
+    pass
+
+  @abstractmethod
+  def determinate_package_link(self, package_name: str) -> str:
+    """
+    Determines the full URL for a package based on its name.
+    Must be implemented by subclasses.
+
+    :param package_name: The name of the package for which to generate the link.
+    :type package_name: str
+
+    :return: The full URL for the package.
+    :rtype: str
     """
     pass

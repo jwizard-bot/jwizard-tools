@@ -1,0 +1,11 @@
+author: milosz08
+
+sql: |
+  DELETE FROM project_packages;
+
+  ALTER TABLE project_packages
+  ADD COLUMN link VARCHAR(255) NOT NULL;
+
+rollback: |
+  ALTER TABLE project_packages
+  DROP COLUMN link;

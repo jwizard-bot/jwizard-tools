@@ -41,3 +41,15 @@ class PipPackagesExtractor(PackagesExtractor):
       match = pattern.match(line)
       if match:
         self.packages.append(match.group(0).lower())
+
+  def determinate_package_link(self, package_name: str) -> str:
+    """
+    Generates the full URL link for a python package based on its name.
+
+    :param package_name: The name of the package for which the link is generated.
+    :type package_name: str
+
+    :return: The full URL link to the package.
+    :rtype: str
+    """
+    return f"{self.base_url}/{package_name}"

@@ -51,3 +51,15 @@ class NodePackagesExtractor(PackagesExtractor):
         parsed_lines.add(line)
 
     self.packages = list(parsed_lines)
+
+  def determinate_package_link(self, package_name: str) -> str:
+    """
+    Generates the full URL link for a node package based on its name.
+
+    :param package_name: The name of the package for which the link is generated.
+    :type package_name: str
+
+    :return: The full URL link to the package.
+    :rtype: str
+    """
+    return f"{self.base_url}/{package_name}"

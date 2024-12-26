@@ -37,3 +37,16 @@ class GradlePackagesExtractor(PackagesExtractor):
     for _, details in parsed_content["libraries"].items():
       if "module" in details:
         self.packages.append(details["module"].lower())
+
+  def determinate_package_link(self, package_name: str) -> str:
+    """
+    Generates the full URL link for a gradle package, replacing any colons in the package name with slashes.
+
+    :param package_name: The name of the package, which may contain colons that need to be replaced with slashes.
+    :type package_name: str
+
+    :return: The full URL link to the package with the updated package name.
+    :rtype: str
+    """
+    package_without_semi = package_name.replace(":", "/")
+    return f"{self.base_url}/{package_without_semi}"
