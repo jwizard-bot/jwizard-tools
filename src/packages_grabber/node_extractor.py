@@ -43,7 +43,10 @@ class NodePackagesExtractor(PackagesExtractor):
         first_at_index = line.find('@')
 
         if terminator_count == 2:
-          second_at_index = line.find('@', first_at_index + 1)
+          if line.startswith('@'):
+            second_at_index = line.find('@', first_at_index + 1)
+          else:
+            second_at_index = line.find('@')
           line = line[:second_at_index]
         elif terminator_count == 1:
           line = line[:first_at_index]
