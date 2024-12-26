@@ -29,7 +29,7 @@ class Migrator:
     self.revert_migrations = {}
     self.migration_files = self.file_parser.take_migration_files()
 
-  def __check_if_migrations_table_exist(self) -> bool:
+  def _check_if_migrations_table_exist(self) -> bool:
     """
     Checks if the migrations tracking table exists in the database.
 
@@ -47,7 +47,7 @@ class Migrator:
     })
     return result.scalar()
 
-  def __create_migrations_table(self):
+  def _create_migrations_table(self):
     """
     Creates the migrations table if it does not exist, defining columns for tracking migration files.
     """
@@ -72,9 +72,9 @@ class Migrator:
     Checks for the existence of the migrations table, creates it if necessary, and populates `applied_migrations`
     with data from the table.
     """
-    table_exist = self.__check_if_migrations_table_exist()
+    table_exist = self._check_if_migrations_table_exist()
     if not table_exist:
-      self.__create_migrations_table()
+      self._create_migrations_table()
       warning(f"Unable to find \"{self.table_name}\" table. Created via SQL statement.")
       return
 
@@ -85,7 +85,7 @@ class Migrator:
     self.applied_migrations = {f"{row[2]}/{row[0]}": row[1] for row in result.fetchall()}
     info(f"Already executed: {len(self.applied_migrations)} migrations.")
 
-  def __apply_migration(self, sql: str) -> int:
+  def _apply_migration(self, sql: str) -> int:
     """
     Applies a migration by executing each SQL query in the given migration content.
 
@@ -100,7 +100,7 @@ class Migrator:
       self.connection.execute(text(query))
     return len(queries)
 
-  def __update_migrations_table(self, file_name: str, author: str, file_md5: str) -> int:
+  def _update_migrations_table(self, file_name: str, author: str, file_md5: str) -> int:
     """
     Updates the migrations table to track a new migration as applied.
 
@@ -131,7 +131,7 @@ class Migrator:
     })
     return result.rowcount
 
-  def __check_passed_migration_file_md5(self, full_path: str):
+  def _check_passed_migration_file_md5(self, full_path: str):
     """
     Verifies that the MD5 hash of a migration file matches the hash stored in the database.
 
@@ -166,20 +166,20 @@ class Migrator:
         continue
 
       if full_path in self.applied_migrations:
-        self.__check_passed_migration_file_md5(full_path)
+        self._check_passed_migration_file_md5(full_path)
         continue
 
       (author, sql, rollback) = details
       self.revert_migrations[base_name] = rollback
       file_md5 = self.file_parser.calculate_file_content_hash()
 
-      queries_count = self.__apply_migration(sql)
-      applied_migrations += self.__update_migrations_table(base_name, author, file_md5)
+      queries_count = self._apply_migration(sql)
+      applied_migrations += self._update_migrations_table(base_name, author, file_md5)
       info(f"Executed migration: \"{base_name}\" with: {queries_count} single SQL queries.")
 
     return applied_migrations
 
-  def __drop_migrations_table_row(self, file_name: str) -> int:
+  def _drop_migrations_table_row(self, file_name: str) -> int:
     """
     Removes a specific migration entry from the migrations table.
 
@@ -201,12 +201,10 @@ class Migrator:
 
     Applies each SQL command in the rollback section, and removes the entry from the migrations table upon success.
     """
-    print(self.revert_migrations)
-
     for file_name, drop_sql in self.revert_migrations.items():
       queries = self.file_parser.extract_subqueries(drop_sql)
       for query in queries:
         self.connection.execute(text(query))
 
-      count_rows = self.__drop_migrations_table_row(file_name)
+      count_rows = self._drop_migrations_table_row(file_name)
       warning(f"Reverted migration: \"{file_name}\" with: {len(queries) + count_rows} single SQL queries.")

@@ -58,9 +58,9 @@ class FileParser:
 
     migration_content = yaml_load(migration_yml)
 
-    no_author_field = self.__check_if_field_not_exist(self.author_section_name, migration_content)
-    no_sql_field = self.__check_if_field_not_exist(self.sql_section_name, migration_content)
-    no_rollback_field = self.__check_if_field_not_exist(self.rollback_section_name, migration_content)
+    no_author_field = self._check_if_field_not_exist(self.author_section_name, migration_content)
+    no_sql_field = self._check_if_field_not_exist(self.sql_section_name, migration_content)
+    no_rollback_field = self._check_if_field_not_exist(self.rollback_section_name, migration_content)
 
     if no_author_field or no_sql_field or no_rollback_field:
       warning(f"File: \"{filename}\" has inappropriate structure.")
@@ -77,7 +77,7 @@ class FileParser:
     self.raw_file_content = migration_yml
     return (author, sql, rollback)
 
-  def __check_if_field_not_exist(self, field_name: str, migration_content: Any):
+  def _check_if_field_not_exist(self, field_name: str, migration_content: Any):
     """
     Checks if a specific field exists in the migration content.
 

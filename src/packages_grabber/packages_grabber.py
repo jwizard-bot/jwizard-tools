@@ -17,7 +17,7 @@ class PackagesGrabber:
     :param connection: The database connection used to execute SQL queries.
     :type connection: sqlalchemy.Connection
 
-    :param repo: The repository name, used to fetch project data (e.g., 'user/repo').
+    :param repo: The repository name, used to fetch project data (ex. 'user/repo').
     :type repo: str
     """
     self.connection = connection
@@ -32,7 +32,7 @@ class PackagesGrabber:
       "pip": PipPackagesExtractor,
     }
 
-  def __extract_project_parser_provider(self):
+  def _extract_project_parser_provider(self):
     """
     Retrieves the project ID, current MD5 hash of the dependency file, and the parser provider name for the given
     project.
@@ -53,7 +53,7 @@ class PackagesGrabber:
       self.packages_md5 = str(row[1])
       self.provider = str(row[2])
 
-  def __determinate_extractor(self):
+  def _determinate_extractor(self):
     """
     Determines the appropriate extractor class based on the parser provider.
 
@@ -67,7 +67,7 @@ class PackagesGrabber:
       exit(0)
     self.extractor = extractor
 
-  def __find_already_persisted_packages(self) -> list[str]:
+  def _find_already_persisted_packages(self) -> list[str]:
     """
     Finds packages that are already persisted in the database for a given project.
 
@@ -80,7 +80,7 @@ class PackagesGrabber:
     })
     return [row[0] for row in result.fetchall()]
 
-  def __persist_packages(self, packages: list[str]) -> int:
+  def _persist_packages(self, packages: list[str]) -> int:
     """
     Persists a list of new packages into the database for the specified project.
 
@@ -97,7 +97,7 @@ class PackagesGrabber:
     result = self.connection.execute(query)
     return result.rowcount
 
-  def __drop_packages(self, packages: list[str]) -> int:
+  def _drop_packages(self, packages: list[str]) -> int:
     """
     Deletes specified packages from the project_packages table in the database.
 
@@ -116,7 +116,7 @@ class PackagesGrabber:
     })
     return result.rowcount
 
-  def __update_packages_md5(self):
+  def _update_packages_md5(self):
     """
     Updates the MD5 hash of the dependency file in the database.
 
@@ -140,12 +140,13 @@ class PackagesGrabber:
     :return: A tuple containing two integers: the number of packages persisted and the number of packages deleted.
     :rtype: tuple[int, int]
     """
-    self.__extract_project_parser_provider()
+    self._extract_project_parser_provider()
 
-    self.__determinate_extractor()
+    self._determinate_extractor()
+    self.extractor.find_base_url(self.connection, self.provider)
     self.extractor.extract_and_parse(self.packages_md5)
 
-    persisted = self.__find_already_persisted_packages()
+    persisted = self._find_already_persisted_packages()
     to_persist = list(set(self.extractor.packages) - set(persisted))
     to_drop = list(set(persisted) - set(self.extractor.packages))
 
@@ -156,9 +157,9 @@ class PackagesGrabber:
       info(f"To drop: \"{to_drop_package}\".")
 
     info(f"Already persisted: {len(persisted)}, to persist: {len(to_persist)}, to drop: {len(to_drop)}.")
-    persisted_in_db = self.__persist_packages(to_persist)
-    dropped_from_db = self.__drop_packages(to_drop)
+    persisted_in_db = self._persist_packages(to_persist)
+    dropped_from_db = self._drop_packages(to_drop)
 
-    self.__update_packages_md5()
+    self._update_packages_md5()
     info(f"Lock file with MD5: \"{self.extractor.packages_md5}\".")
     return persisted_in_db, dropped_from_db
