@@ -1,11 +1,12 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
-from requests import get as request_get
-from logging import error, info
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from datetime import datetime, timezone
+from logging import error, info
+
+from requests import get as request_get
 from sqlalchemy import Connection, text
+
 
 class CacheVersion:
   def __init__(self, connection: Connection, repo: str):
@@ -44,7 +45,7 @@ class CacheVersion:
 
     info(f"Fetch last commit SHA: \"{self.last_commit_sha}\" from: \"{self.repo}\".")
 
-  def persist_updated_details(self) -> int:
+  def persist_updated_details(self):
     """
     Updates the details of a project in the database, including the latest version and the timestamp of the last update.
 
@@ -52,7 +53,7 @@ class CacheVersion:
     `last_updated_utc` fields based on the provided parameters. The project name is extracted from the `repo` parameter
     (in the form 'owner/repository').
 
-    :return: The number of rows affected by the update (i.e., the number of records modified).
+    :return: The number of rows affected by the update (ex. the number of records modified).
     :rtype: int
     """
     self.updated_time = datetime.now(timezone.utc)

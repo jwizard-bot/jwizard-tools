@@ -1,9 +1,10 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from toml import loads as loads_tom
-from packages_grabber.packages_extractor import PackagesExtractor
+
+from .packages_extractor import PackagesExtractor
+
 
 class GradlePackagesExtractor(PackagesExtractor):
   """

@@ -1,14 +1,46 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from glob import glob
 from hashlib import md5
 from logging import info, warning
 from os import path
 from re import match, sub as re_sub
 from typing import Any
+
 from yaml import safe_load as yaml_load
+
+
+def check_if_field_not_exist(field_name: str, migration_content: Any):
+  """
+  Checks if a specific field exists in the migration content.
+
+  :param field_name: The name of the field to check for.
+  :type field_name: str
+  :param migration_content: The migration content loaded from YAML.
+  :type migration_content: Any
+
+  :return: True if the field does not exist in the migration content, False otherwise.
+  :rtype: bool
+  """
+  return not field_name in migration_content
+
+
+def extract_subqueries(query: str) -> list[str]:
+  """
+  Splits a SQL query into individual subqueries and cleans up whitespace.
+
+  :param query: The SQL query to split.
+  :type query: str
+
+  :return: A list of cleaned subqueries.
+  :rtype: list[str]
+  """
+  queries = query.split(";")
+  cleaned_queries = [re_sub(r"\s+", " ", query) for query in queries]
+  stripped_queries = [query for query in cleaned_queries if query.strip()]
+  return stripped_queries
+
 
 class FileParser:
   def __init__(self, base_directory):
@@ -34,7 +66,7 @@ class FileParser:
     pattern = r"\d{2}-\d{2}-\d{4}_\d{5}_.+\.yml"
     migration_files = glob(path.join(self.base_directory, f"*.yml"))
     filtered_files = [file for file in migration_files if match(pattern, path.basename(file))]
-    
+
     info(f"Found: {len(filtered_files)} migration files in: \"{self.base_directory}\" migration scripts directory.")
     return sorted(filtered_files)
 
@@ -58,9 +90,9 @@ class FileParser:
 
     migration_content = yaml_load(migration_yml)
 
-    no_author_field = self._check_if_field_not_exist(self.author_section_name, migration_content)
-    no_sql_field = self._check_if_field_not_exist(self.sql_section_name, migration_content)
-    no_rollback_field = self._check_if_field_not_exist(self.rollback_section_name, migration_content)
+    no_author_field = check_if_field_not_exist(self.author_section_name, migration_content)
+    no_sql_field = check_if_field_not_exist(self.sql_section_name, migration_content)
+    no_rollback_field = check_if_field_not_exist(self.rollback_section_name, migration_content)
 
     if no_author_field or no_sql_field or no_rollback_field:
       warning(f"File: \"{filename}\" has inappropriate structure.")
@@ -75,21 +107,7 @@ class FileParser:
       return None
 
     self.raw_file_content = migration_yml
-    return (author, sql, rollback)
-
-  def _check_if_field_not_exist(self, field_name: str, migration_content: Any):
-    """
-    Checks if a specific field exists in the migration content.
-
-    :param field_name: The name of the field to check for.
-    :type field_name: str
-    :param migration_content: The migration content loaded from YAML.
-    :type migration_content: Any
-
-    :return: True if the field does not exist in the migration content, False otherwise.
-    :rtype: bool
-    """
-    return not field_name in migration_content
+    return author, sql, rollback
 
   def calculate_file_content_hash(self) -> str:
     """
@@ -101,18 +119,3 @@ class FileParser:
     hash_obj = md5()
     hash_obj.update(self.raw_file_content.encode('utf-8'))
     return hash_obj.hexdigest()
-
-  def extract_subqueries(self, query: str) -> list[str]:
-    """
-    Splits a SQL query into individual subqueries and cleans up whitespace.
-
-    :param query: The SQL query to split.
-    :type query: str
-
-    :return: A list of cleaned subqueries.
-    :rtype: list[str]
-    """
-    queries = query.split(";")
-    cleaned_queries = [re_sub(r"\s+", " ", query) for query in queries]
-    stripped_queries = [query for query in cleaned_queries if query.strip()]
-    return stripped_queries

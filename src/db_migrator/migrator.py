@@ -1,12 +1,14 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from datetime import datetime, timezone
 from logging import info, warning
 from os import path, sep
+
 from sqlalchemy import Connection, text
-from db_migrator.file_parser import FileParser
+
+from .file_parser import FileParser, extract_subqueries
+
 
 class Migrator:
   def __init__(self, connection: Connection, file_parser: FileParser, table_name: str):
@@ -19,7 +21,7 @@ class Migrator:
     :param file_parser: A FileParser instance responsible for reading and parsing migration files.
     :type file_parser: FileParser
 
-    :param table_name: The name of the database table for storing applied migrations metadata.
+    :param table_name: The name of the database table for storing applied migrations' metadata.
     :type table_name: str
     """
     self.table_name = table_name
@@ -95,12 +97,12 @@ class Migrator:
     :return: The number of individual SQL queries executed.
     :rtype: int
     """
-    queries = self.file_parser.extract_subqueries(sql)
+    queries = extract_subqueries(sql)
     for query in queries:
       self.connection.execute(text(query))
     return len(queries)
 
-  def _update_migrations_table(self, file_name: str, author: str, file_md5: str) -> int:
+  def _update_migrations_table(self, file_name: str, author: str, file_md5: str):
     """
     Updates the migrations table to track a new migration as applied.
 
@@ -179,7 +181,7 @@ class Migrator:
 
     return applied_migrations
 
-  def _drop_migrations_table_row(self, file_name: str) -> int:
+  def _drop_migrations_table_row(self, file_name: str):
     """
     Removes a specific migration entry from the migrations table.
 
@@ -202,7 +204,7 @@ class Migrator:
     Applies each SQL command in the rollback section, and removes the entry from the migrations table upon success.
     """
     for file_name, drop_sql in self.revert_migrations.items():
-      queries = self.file_parser.extract_subqueries(drop_sql)
+      queries = extract_subqueries(drop_sql)
       for query in queries:
         self.connection.execute(text(query))
 

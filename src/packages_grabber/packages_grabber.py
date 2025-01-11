@@ -1,13 +1,15 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from logging import info, error
+
 from sqlalchemy import Connection, text
-from packages_grabber.gradle_extractor import GradlePackagesExtractor
-from packages_grabber.node_extractor import NodePackagesExtractor
-from packages_grabber.packages_extractor import PackagesExtractor
-from packages_grabber.pip_extractor import PipPackagesExtractor
+
+from .gradle_extractor import GradlePackagesExtractor
+from .node_extractor import NodePackagesExtractor
+from .packages_extractor import PackagesExtractor
+from .pip_extractor import PipPackagesExtractor
+
 
 class PackagesGrabber:
   def __init__(self, connection: Connection, repo: str):
@@ -26,7 +28,7 @@ class PackagesGrabber:
     self.packages_md5 = None
     self.provider = None
     self.extractor = None
-    self.extractors: dict[str, PackagesExtractor] = {
+    self.extractors = {
       "gradle": GradlePackagesExtractor,
       "node": NodePackagesExtractor,
       "pip": PipPackagesExtractor,
@@ -80,7 +82,7 @@ class PackagesGrabber:
     })
     return [row[0] for row in result.fetchall()]
 
-  def _persist_packages(self, packages: list[str]) -> int:
+  def _persist_packages(self, packages: list[str]):
     """
     Persists a list of new packages into the database for the specified project.
 
@@ -98,7 +100,7 @@ class PackagesGrabber:
     result = self.connection.execute(query)
     return result.rowcount
 
-  def _drop_packages(self, packages: list[str]) -> int:
+  def _drop_packages(self, packages: list[str]):
     """
     Deletes specified packages from the project_packages table in the database.
 
@@ -121,7 +123,7 @@ class PackagesGrabber:
     """
     Updates the MD5 hash of the dependency file in the database.
 
-    This method updates the project's `packages_md5` field in the `projects` table to reflect the latest MD5 hash of 
+    This method updates the project's `packages_md5` field in the `projects` table to reflect the latest MD5 hash of
     the dependency file after the packages have been processed.
     """
     query = text("UPDATE projects SET packages_md5 = :packages_md5 WHERE id = :project_id")
@@ -132,10 +134,10 @@ class PackagesGrabber:
 
   def grab_and_persist_packages(self) -> tuple[int, int]:
     """
-    Grabs the packages for the specified repository, determines which packages need to be persisted or removed, 
+    Grabs the packages for the specified repository, determines which packages need to be persisted or removed,
     and updates the database accordingly.
 
-    This method is the main entry point for grabbing package data, comparing it to existing entries in the database, 
+    This method is the main entry point for grabbing package data, comparing it to existing entries in the database,
     and performing insertions and deletions as necessary.
 
     :return: A tuple containing two integers: the number of packages persisted and the number of packages deleted.

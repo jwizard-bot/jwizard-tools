@@ -1,21 +1,24 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from argparse import ArgumentParser
-from dotenv import load_dotenv
 from logging import info, error
+
+from dotenv import load_dotenv
+
 from common.db import Db
 from common.header import print_header
-from common.logger import *
+from common.logger import init_logger
 from common.vault import VaultClient
 from db_migrator.file_parser import FileParser
 from db_migrator.migrator import Migrator
 
+init_logger()
 load_dotenv()
 
 table_name = "_applied_migrations"
 base_directory = "migrations"
+
 
 def main():
   print_header(initiator=__file__)
@@ -26,7 +29,7 @@ def main():
 
   vault_client = VaultClient()
   secrets = vault_client.get_secrets(kv_backend="jwizard", path="common")
-  
+
   db = Db(secrets)
   connection = db.engine.connect()
   transaction = connection.begin()
@@ -51,6 +54,7 @@ def main():
     connection.close()
 
   info(f"Finished.")
+
 
 if __name__ == '__main__':
   main()

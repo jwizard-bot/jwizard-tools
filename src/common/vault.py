@@ -1,10 +1,11 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
-from os import getenv
-from hvac import Client
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from logging import info, error
+from os import getenv
+
+from hvac import Client
+
 
 class VaultClient:
   """
@@ -21,7 +22,7 @@ class VaultClient:
     token = getenv("ENV_VAULT_TOKEN")
     address = getenv("JWIZARD_VAULT_SERVER", "http://localhost:8761")
     try:
-      if token != None:
+      if token is not None:
         self.client = Client(url=address, token=token)
       else:
         self.client = Client(url=address)
@@ -32,7 +33,7 @@ class VaultClient:
       self.client.secrets.kv.default_kv_version = 1
       info(f"Authenticated to Vault server.")
     except Exception as e:
-      error(f"Unable authenticate to Vault server.")
+      error(f"Unable authenticate to Vault server. Cause: {e}.")
       info("Finished.")
       exit(1)
 

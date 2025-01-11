@@ -1,9 +1,10 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from re import compile as regex_compile
-from packages_grabber.packages_extractor import PackagesExtractor
+
+from .packages_extractor import PackagesExtractor
+
 
 class PipPackagesExtractor(PackagesExtractor):
   """
@@ -11,6 +12,7 @@ class PipPackagesExtractor(PackagesExtractor):
 
   Inherits from PackagesExtractor and specifies the file path for Python packages.
   """
+
   def __init__(self, repo_name: str, branch: str):
     """
     Initializes the PipPackagesExtractor with repository details and a specific file path for Python packages.

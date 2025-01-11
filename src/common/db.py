@@ -1,10 +1,11 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from typing import Any
 from urllib import parse as url_parse
+
 from sqlalchemy import create_engine
+
 
 class Db:
   """

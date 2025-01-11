@@ -1,17 +1,20 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from argparse import ArgumentParser
-from dotenv import load_dotenv
 from logging import error, info
+
+from dotenv import load_dotenv
+
+from cache_version.cache_version import CacheVersion
 from common.db import Db
 from common.header import print_header
-from common.logger import *
+from common.logger import init_logger
 from common.vault import VaultClient
-from cache_version.cache_version import CacheVersion
 
+init_logger()
 load_dotenv()
+
 
 def main():
   print_header(initiator=__file__)
@@ -46,6 +49,7 @@ def main():
     connection.close()
 
   info("Finished.")
+
 
 if __name__ == "__main__":
   main()

@@ -1,12 +1,28 @@
-"""
-Copyright (c) 2024 by JWizard
-Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-"""
-from requests import get as request_get
-from logging import info, error
-from hashlib import md5
-from sqlalchemy import Connection, text
+#  Copyright (c) 2025 by JWizard
+#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+
 from abc import ABC, abstractmethod
+from hashlib import md5
+from logging import info, error
+
+from requests import get as request_get
+from sqlalchemy import Connection, text
+
+
+def calculate_md5(raw_content) -> str:
+  """
+  Calculates the MD5 hash of the provided raw content.
+
+  :param raw_content: The raw content to hash.
+  :type raw_content: str
+
+  :return: The MD5 hash of the content.
+  :rtype: str
+  """
+  hash_obj = md5()
+  hash_obj.update(raw_content.encode('utf-8'))
+  return hash_obj.hexdigest()
+
 
 class PackagesExtractor(ABC):
   """
@@ -69,7 +85,7 @@ class PackagesExtractor(ABC):
     :type db_md5: str | None
     """
     raw_content = self._fetch_raw_content()
-    self.packages_md5 = self._calculate_md5(raw_content)
+    self.packages_md5 = calculate_md5(raw_content)
     info(f"Calculated incoming MD5: \"{self.packages_md5}\", persisted MD5: \"{db_md5}\".")
 
     if self.packages_md5 == db_md5:
@@ -79,20 +95,6 @@ class PackagesExtractor(ABC):
 
     self._extract_packages(raw_content)
     info(f"Parsed: {len(self.packages)} libraries from: \"{self.repo_name}\" repository.")
-
-  def _calculate_md5(self, raw_content) -> str:
-    """
-    Calculates the MD5 hash of the provided raw content.
-
-    :param raw_content: The raw content to hash.
-    :type raw_content: str
-
-    :return: The MD5 hash of the content.
-    :rtype: str
-    """
-    hash_obj = md5()
-    hash_obj.update(raw_content.encode('utf-8'))
-    return hash_obj.hexdigest()
 
   def find_base_url(self, connection: Connection, parser_name: str):
     """
@@ -104,7 +106,7 @@ class PackagesExtractor(ABC):
     :param parser_name: The name of the parser for which to retrieve the base URL.
     :type parser_name: str
     """
-    query = text("SELECT base_url FROM package_parsers WHERE name = :parser_name");
+    query = text("SELECT base_url FROM package_parsers WHERE name = :parser_name")
     result = connection.execute(query, parameters={
       "parser_name": parser_name,
     })
@@ -112,7 +114,7 @@ class PackagesExtractor(ABC):
     info(f"Determinate base url: \"{self.base_url}\" for package parser: \"{parser_name}\".")
 
   @abstractmethod
-  def _extract_packages(raw_format: str):
+  def _extract_packages(self, raw_format: str):
     """
     Abstract method for extracting packages from raw content.
     Must be implemented by subclasses.
