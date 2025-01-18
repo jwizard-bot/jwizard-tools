@@ -1,5 +1,7 @@
 ![](.github/banner.png)
 
+[[About project](https://jwizard.pl/about)]
+
 JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
 player. This repository contains scripts that automate operations in the CI/CD pipelines of other JWizard projects, as
 well as standalone scripts used in various JWizard projects.
@@ -108,7 +110,9 @@ To create migration template file (in UNIX environments), type:
 $ sudo chmod +x exec/create-migration
 $ exec/create-migration <migration name> <pipeline> <author>
 ```
+
 where:
+
 * `<migration name>` is the self descriptive name of the migration file,
 * `<pipeline>` is one of the migration base directory (see `--pipeline` argument for `db_migrator` project),
 * `<author` is migration author persisted in DB. By default, gets author from git property `user.name`. Not required.
