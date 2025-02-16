@@ -1,6 +1,3 @@
-#  Copyright (c) 2025 by JWizard
-#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-
 from logging import info, error
 from os import getenv
 
@@ -8,17 +5,7 @@ from hvac import Client
 
 
 class VaultClient:
-  """
-  A client for interacting with HashiCorp Vault to retrieve secrets from key-value (KV) storage.
-  """
-
   def __init__(self):
-    """
-    Initializes the Vault client, attempting authentication with the provided arguments.
-    Tries token-based authentication first if a token is provided, else falls back to username-password authentication.
-
-    :raises SystemExit: If connection or authentication to Vault server fails.
-    """
     token = getenv("ENV_VAULT_TOKEN")
     address = getenv("JWIZARD_VAULT_SERVER", "http://localhost:8761")
     try:
@@ -38,19 +25,6 @@ class VaultClient:
       exit(1)
 
   def get_secrets(self, kv_backend: str, path: str):
-    """
-    Retrieves secrets from a specified key-value backend in Vault.
-
-    :param kv_backend: The mount point of the KV backend where secrets are stored.
-    :type kv_backend: str
-
-    :param path: The path within the KV backend to the desired secret.
-    :type path: str
-
-    :return: A dictionary containing the secret data if retrieval is successful, or None if not.
-    :rtype: Optional[Dict[str, str]]
-    :raises Exception: If the KV storage path is invalid or inaccessible.
-    """
     try:
       response = self.client.secrets.kv.read_secret(mount_point=kv_backend, path=path)
       return response["data"]

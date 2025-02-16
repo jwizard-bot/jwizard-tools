@@ -1,6 +1,3 @@
-#  Copyright (c) 2025 by JWizard
-#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-
 from logging import info, error
 
 from sqlalchemy import Connection, text
@@ -13,15 +10,6 @@ from .pip_extractor import PipPackagesExtractor
 
 class PackagesGrabber:
   def __init__(self, connection: Connection, repo: str):
-    """
-    Initializes the PackagesGrabber instance.
-
-    :param connection: The database connection used to execute SQL queries.
-    :type connection: sqlalchemy.Connection
-
-    :param repo: The repository name, used to fetch project data (ex. 'user/repo').
-    :type repo: str
-    """
     self.connection = connection
     self.repo = repo
     self.project_id = None
@@ -35,12 +23,6 @@ class PackagesGrabber:
     }
 
   def _extract_project_parser_provider(self):
-    """
-    Retrieves the project ID, current MD5 hash of the dependency file, and the parser provider name for the given
-    project.
-
-    This information is fetched from the database using the repository name to match the project.
-    """
     query = text("""
       SELECT p.id, p.packages_md5, ps.name FROM package_parsers ps
       INNER JOIN projects p ON p.parser_id = ps.id
@@ -56,13 +38,10 @@ class PackagesGrabber:
       self.provider = str(row[2])
 
   def _determinate_extractor(self):
-    """
-    Determines the appropriate extractor class based on the parser provider.
-
-    This method selects the appropriate class for extracting package data based on the repository's provider (ex.
-    Gradle, Node, or Pip). If the provider is unrecognized, it logs an error and terminates the process.
-    """
-    extractor: PackagesExtractor = self.extractors.get(self.provider, None)(repo_name=self.repo, branch="master")
+    extractor: PackagesExtractor = self.extractors.get(self.provider, None)(
+      repo_name=self.repo,
+      branch="master"
+    )
     if not extractor:
       error(f"Unexpected provider: \"{self.provider}\".")
       info("Finished.")
@@ -70,12 +49,6 @@ class PackagesGrabber:
     self.extractor = extractor
 
   def _find_already_persisted_packages(self) -> list[str]:
-    """
-    Finds packages that are already persisted in the database for a given project.
-
-    :return: A list of dependency names already persisted.
-    :rtype: list[str]
-    """
     query = text("SELECT name FROM project_packages WHERE project_id = :project_id")
     result = self.connection.execute(query, parameters={
       "project_id": self.project_id,
@@ -83,15 +56,6 @@ class PackagesGrabber:
     return [row[0] for row in result.fetchall()]
 
   def _persist_packages(self, packages: list[str]):
-    """
-    Persists a list of new packages into the database for the specified project.
-
-    :param packages: List of dependency names to persist.
-    :type packages: list[str]
-
-    :return: The number of rows affected by the insert.
-    :rtype: int
-    """
     if not packages:
       return 0
     link_creator = self.extractor.determinate_package_link
@@ -101,15 +65,6 @@ class PackagesGrabber:
     return result.rowcount
 
   def _drop_packages(self, packages: list[str]):
-    """
-    Deletes specified packages from the project_packages table in the database.
-
-    :param packages: A list of package names to be removed.
-    :type packages: list[str]
-
-    :return: The number of rows affected (i.e., the number of packages deleted).
-    :rtype: int
-    """
     if not packages:
       return 0
     query = text(f"DELETE FROM project_packages WHERE project_id = :project_id AND name IN :names")
@@ -120,12 +75,6 @@ class PackagesGrabber:
     return result.rowcount
 
   def _update_packages_md5(self):
-    """
-    Updates the MD5 hash of the dependency file in the database.
-
-    This method updates the project's `packages_md5` field in the `projects` table to reflect the latest MD5 hash of
-    the dependency file after the packages have been processed.
-    """
     query = text("UPDATE projects SET packages_md5 = :packages_md5 WHERE id = :project_id")
     self.connection.execute(query, parameters={
       "packages_md5": self.extractor.packages_md5,
@@ -133,16 +82,6 @@ class PackagesGrabber:
     })
 
   def grab_and_persist_packages(self) -> tuple[int, int]:
-    """
-    Grabs the packages for the specified repository, determines which packages need to be persisted or removed,
-    and updates the database accordingly.
-
-    This method is the main entry point for grabbing package data, comparing it to existing entries in the database,
-    and performing insertions and deletions as necessary.
-
-    :return: A tuple containing two integers: the number of packages persisted and the number of packages deleted.
-    :rtype: tuple[int, int]
-    """
     self._extract_project_parser_provider()
 
     self._determinate_extractor()
@@ -159,7 +98,8 @@ class PackagesGrabber:
     for to_drop_package in to_drop:
       info(f"To drop: \"{to_drop_package}\".")
 
-    info(f"Already persisted: {len(persisted)}, to persist: {len(to_persist)}, to drop: {len(to_drop)}.")
+    info(f"Already persisted: {len(persisted)}, to persist: {len(to_persist)}, "
+         f"to drop: {len(to_drop)}.")
     persisted_in_db = self._persist_packages(to_persist)
     dropped_from_db = self._drop_packages(to_drop)
 

@@ -1,6 +1,3 @@
-#  Copyright (c) 2025 by JWizard
-#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-
 from os import path
 
 from pyfiglet import figlet_format
@@ -15,15 +12,6 @@ Application license you will find in the LICENSE file"""
 
 
 def print_header(initiator: str):
-  """
-  Prints a styled header for the application.
-
-  This function uses ASCII art to display the title of the application and the name of the file that initiated the call.
-  It also displays a panel with information about the source code repository and the author.
-
-  :param initiator: The name of the file that initiates this function.
-  :type initiator: str
-  """
   fancy_header = figlet_format(title, font="slant")
   print(fancy_header, end="")
   print(f"Initiator: {path.basename(initiator)}. Launching...")

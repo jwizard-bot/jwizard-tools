@@ -1,6 +1,3 @@
-#  Copyright (c) 2025 by JWizard
-#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-
 from abc import ABC, abstractmethod
 from hashlib import md5
 from logging import info, error
@@ -10,47 +7,13 @@ from sqlalchemy import Connection, text
 
 
 def calculate_md5(raw_content) -> str:
-  """
-  Calculates the MD5 hash of the provided raw content.
-
-  :param raw_content: The raw content to hash.
-  :type raw_content: str
-
-  :return: The MD5 hash of the content.
-  :rtype: str
-  """
   hash_obj = md5()
   hash_obj.update(raw_content.encode('utf-8'))
   return hash_obj.hexdigest()
 
 
 class PackagesExtractor(ABC):
-  """
-  Abstract base class for extracting packages from various file formats.
-
-  :param repo_name: The name of the repository.
-  :type repo_name: str
-
-  :param branch: The branch of the repository to fetch the file from.
-  :type branch: str
-
-  :param file_path: The path to the packages file in the repository.
-  :type file_path: str
-  """
-
   def __init__(self, repo_name: str, branch: str, file_path: str):
-    """
-    Initializes the packages extractor with repository details.
-
-    :param repo_name: The name of the repository.
-    :type repo_name: str
-
-    :param branch: The branch of the repository to fetch.
-    :type branch: str
-
-    :param file_path: The path to the packages file.
-    :type file_path: str
-    """
     self.repo_name = repo_name
     self.branch = branch
     self.file_path = file_path
@@ -59,13 +22,6 @@ class PackagesExtractor(ABC):
     self.base_url = None
 
   def _fetch_raw_content(self) -> str:
-    """
-    Fetches the raw content of the packages file from the GitHub repository.
-
-    :return: The raw content of the packages file.
-    :rtype: str
-    :raises SystemExit: If the request fails with a non-200 status code.
-    """
     url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}/{self.file_path}"
     response = request_get(url)
     if response.status_code != 200:
@@ -77,13 +33,6 @@ class PackagesExtractor(ABC):
     return response.text
 
   def extract_and_parse(self, db_md5: str | None):
-    """
-    Extracts and parses packages from the raw content, comparing file content against the provided database MD5 hash to
-    determine if parsing is needed.
-
-    :param db_md5: The MD5 hash of the current database content to compare against.
-    :type db_md5: str | None
-    """
     raw_content = self._fetch_raw_content()
     self.packages_md5 = calculate_md5(raw_content)
     info(f"Calculated incoming MD5: \"{self.packages_md5}\", persisted MD5: \"{db_md5}\".")
@@ -97,15 +46,6 @@ class PackagesExtractor(ABC):
     info(f"Parsed: {len(self.packages)} libraries from: \"{self.repo_name}\" repository.")
 
   def find_base_url(self, connection: Connection, parser_name: str):
-    """
-    Determines the base URL for a given parser by querying the database.
-
-    :param connection: The database connection object used to execute the query.
-    :type connection: Connection
-
-    :param parser_name: The name of the parser for which to retrieve the base URL.
-    :type parser_name: str
-    """
     query = text("SELECT base_url FROM package_parsers WHERE name = :parser_name")
     result = connection.execute(query, parameters={
       "parser_name": parser_name,
@@ -115,25 +55,8 @@ class PackagesExtractor(ABC):
 
   @abstractmethod
   def _extract_packages(self, raw_format: str):
-    """
-    Abstract method for extracting packages from raw content.
-    Must be implemented by subclasses.
-
-    :param raw_format: The raw content to extract packages from.
-    :type raw_format: str
-    """
     pass
 
   @abstractmethod
   def determinate_package_link(self, package_name: str) -> str:
-    """
-    Determines the full URL for a package based on its name.
-    Must be implemented by subclasses.
-
-    :param package_name: The name of the package for which to generate the link.
-    :type package_name: str
-
-    :return: The full URL for the package.
-    :rtype: str
-    """
     pass

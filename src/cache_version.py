@@ -1,6 +1,3 @@
-#  Copyright (c) 2025 by JWizard
-#  Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-
 from argparse import ArgumentParser
 from logging import error, info
 
@@ -38,7 +35,8 @@ def main():
 
     transaction.commit()
     info(f"Affected: {affected_rows} rows.")
-    info(f"Persisted: \"{cache_version.last_commit_sha}\" version and update time: \"{cache_version.updated_time}\".")
+    info(f"Persisted: \"{cache_version.last_commit_sha}\" version and update time: "
+         f"\"{cache_version.updated_time}\".")
 
   except Exception as ex:
     transaction.rollback()
