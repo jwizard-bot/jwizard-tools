@@ -4,6 +4,7 @@ charset-normalizer==3.4.1
 colorama==0.4.6
 cryptography==44.0.1
 greenlet==3.1.1
+humanize==4.12.1
 hvac==2.3.0
 idna==3.10
 markdown-it-py==3.0.0

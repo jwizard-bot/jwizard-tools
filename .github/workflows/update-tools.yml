@@ -1,4 +1,4 @@
-name: Update packages and cache version of JWizard Tools
+name: Update packages and cache version
 
 on:
   push:
