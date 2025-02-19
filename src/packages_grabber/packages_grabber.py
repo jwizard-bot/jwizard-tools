@@ -1,4 +1,4 @@
-from logging import info, error
+from logging import info
 
 from sqlalchemy import Connection, text
 
@@ -43,9 +43,8 @@ class PackagesGrabber:
       branch="master"
     )
     if not extractor:
-      error(f"Unexpected provider: \"{self.provider}\".")
-      info("Finished.")
-      exit(0)
+      raise Exception(f"Unexpected extractor provider: \"{self.provider}\".")
+
     self.extractor = extractor
 
   def _find_already_persisted_packages(self) -> list[str]:

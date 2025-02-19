@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from hashlib import md5
-from logging import info, error
+from logging import info
 
 from requests import get as request_get
 from sqlalchemy import Connection, text
@@ -25,9 +25,7 @@ class PackagesExtractor(ABC):
     url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}/{self.file_path}"
     response = request_get(url)
     if response.status_code != 200:
-      error(f"Unable to find packages file. Stopping pipeline.")
-      info("Finished.")
-      exit(1)
+      raise Exception("Unable to find packages file.")
 
     info(f"Download packages file: {self.file_path} from: {self.repo_name}.")
     return response.text

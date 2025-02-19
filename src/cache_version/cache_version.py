@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from logging import error, info
+from logging import info
 
 from requests import get as request_get
 from sqlalchemy import Connection, text
@@ -16,9 +16,7 @@ class CacheVersion:
     url = f"https://api.github.com/repos/{self.repo}/commits"
     response = request_get(url)
     if response.status_code != 200:
-      error(f"Unable to find repository commits. Stopping pipeline.")
-      info("Finished.")
-      exit(1)
+      raise Exception("Unable to find repository commits.")
 
     commits = response.json()
     self.last_commit_sha = commits[0]["sha"]

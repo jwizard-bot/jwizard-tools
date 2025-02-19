@@ -46,11 +46,12 @@ def main():
     error(f"Unable to execute action. Rollback passed migration. Cause: {ex}.")
     if migrator:
       migrator.execute_revert_migrations()
+    exit(1)
 
   finally:
     connection.close()
 
-  info(f"Finished.")
+  info("Finished.")
 
 
 if __name__ == '__main__':

@@ -30,3 +30,5 @@ class VaultClient:
       return response["data"]
     except Exception as e:
       error(f"Unable to find KV storage: \"{path}\". Cause: {e}.")
+      info("Finished.")
+      exit(1)
