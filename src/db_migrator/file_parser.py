@@ -19,6 +19,14 @@ def extract_subqueries(query: str) -> list[str]:
   return stripped_queries
 
 
+def lambda_file_sort_key(file_name: str, pattern: str) -> [int, int, int, int]:
+  match_str = match(pattern, file_name)
+  if match_str:
+    year, month, day, incrementer = match_str.groups()
+    return int(year), int(month), int(day), int(incrementer)
+  return 0, 0, 0, 0  # we assume, that string is match (filtered_files variable)
+
+
 class FileParser:
   def __init__(self, base_directory):
     self.base_directory = base_directory
@@ -28,13 +36,13 @@ class FileParser:
     self.rollback_section_name = "rollback"
 
   def take_migration_files(self) -> list[str]:
-    pattern = r"\d{2}-\d{2}-\d{4}_\d{5}_.+\.yml"
+    pattern = r"\d{4}-\d{2}-\d{2}_\d{5}_.+\.yml"  # YYYY-MM-dd_XXXXX_[description].yml
     migration_files = glob(path.join(self.base_directory, f"*.yml"))
     filtered_files = [file for file in migration_files if match(pattern, path.basename(file))]
 
     info(f"Found: {len(filtered_files)} migration "
          f"files in: \"{self.base_directory}\" migration scripts directory.")
-    return sorted(filtered_files)
+    return sorted(filtered_files, key=lambda file_name: lambda_file_sort_key(file_name, pattern))
 
   def read_file_content(self, migration_file: str) -> tuple[str, str, str] | None:
     filename = path.basename(migration_file)
