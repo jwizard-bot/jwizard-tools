@@ -23,15 +23,30 @@ class CacheVersion:
 
     info(f"Fetch last commit SHA: \"{self.last_commit_sha}\" from: \"{self.repo}\".")
 
-  def persist_updated_details(self):
-    self.updated_time = datetime.now(timezone.utc)
-    query = text("""
-      UPDATE projects SET latest_version_long = :version, last_updated_utc = :time_utc
-      WHERE name = :project_name
-    """)
+  def persist_updated_details(self) -> int:
+    project_name = self.repo.split("/")[1]
+
+    # check already persisted version
+    query = text("SELECT latest_version_long FROM projects WHERE name = :project_name")
     result = self.connection.execute(query, parameters={
-      "version": self.last_commit_sha,
-      "time_utc": self.updated_time,
-      "project_name": self.repo.split("/")[1]
+      "project_name": project_name
     })
-    return result.rowcount
+    latest_version_long = result.scalar()
+
+    # persisted only if version was changed (fix deadlock in front-end dashboard and landing-page
+    # concurrency ci/cd pipelines, which can be updated db content as same time)
+    updated_rows = 0
+    if latest_version_long is None or latest_version_long != self.last_commit_sha:
+      self.updated_time = datetime.now(timezone.utc)
+      query = text("""
+        UPDATE projects SET latest_version_long = :version, last_updated_utc = :time_utc
+        WHERE name = :project_name
+      """)
+      result = self.connection.execute(query, parameters={
+        "version": self.last_commit_sha,
+        "time_utc": self.updated_time,
+        "project_name": self.repo.split("/")[1]
+      })
+      updated_rows = result.rowcount
+
+    return updated_rows

@@ -34,9 +34,12 @@ def main():
     affected_rows = cache_version.persist_updated_details()
 
     transaction.commit()
-    info(f"Affected: {affected_rows} rows.")
-    info(f"Persisted: \"{cache_version.last_commit_sha}\" version and update time: "
-         f"\"{cache_version.updated_time}\".")
+    if affected_rows == 0:
+      info(f"No rows affected. Persisted and incoming version are the same.")
+    else:
+      info(f"Affected: {affected_rows} rows.")
+      info(f"Persisted: \"{cache_version.last_commit_sha}\" version and update time: "
+           f"\"{cache_version.updated_time}\".")
 
   except Exception as ex:
     transaction.rollback()
