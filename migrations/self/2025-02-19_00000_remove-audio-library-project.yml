@@ -1,0 +1,8 @@
+author: milosz08
+
+sql: |
+  DELETE FROM projects WHERE name = 'jwizard-audio-client';
+
+rollback: |
+  INSERT INTO projects (id, name, parser_id) VALUES
+  (6, 'jwizard-audio-client', 1);
