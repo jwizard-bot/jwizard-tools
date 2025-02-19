@@ -43,7 +43,7 @@ def main():
     transaction.commit()
 
   except Exception as ex:
-    error(f"Unable to execute action. Rollback passed migration. Cause: {ex}.")
+    error(f"Unable to execute action. Rollback passed migration. Cause: \"{ex}\".")
     if migrator:
       migrator.execute_revert_migrations()
     exit(1)

@@ -36,7 +36,7 @@ def main():
 
   except Exception as ex:
     transaction.rollback()
-    error(f"Unable to execute action. Cause: {ex}.")
+    error(f"Unable to execute action. Cause: \"{ex}\".")
     exit(1)
 
   finally:
