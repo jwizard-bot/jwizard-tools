@@ -42,6 +42,10 @@ class CodeLinesAnalyzer:
       ".gif",
       ".ico",
       ".jar",
+      ".editorconfig",
+      ".env",
+      ".gitignore",
+      ".md"
     }
 
   def _extract_ext_with_stats(self):

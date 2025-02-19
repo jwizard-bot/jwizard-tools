@@ -45,3 +45,10 @@ jobs:
         run: exec/run-with-config packages_grabber \
           "${{ secrets.CONFIG_FILE_CONTENT }}" \
           --repo ${{ github.repository }}
+
+      - name: Run project analyzer
+        run: exec/run-with-config project_analyzer \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
