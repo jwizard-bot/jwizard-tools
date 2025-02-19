@@ -8,7 +8,7 @@ from sqlalchemy import Connection, text
 
 def calculate_md5(raw_content) -> str:
   hash_obj = md5()
-  hash_obj.update(raw_content.encode('utf-8'))
+  hash_obj.update(raw_content.encode("utf-8"))
   return hash_obj.hexdigest()
 
 

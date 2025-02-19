@@ -9,7 +9,7 @@ class PipPackagesExtractor(PackagesExtractor):
 
   def _extract_packages(self, raw_content: str):
     lines = raw_content.strip().splitlines()
-    pattern = regex_compile(r'^[A-Za-z0-9_\-]+')
+    pattern = regex_compile(r"^[A-Za-z0-9_\-]+")
 
     for line in lines:
       line = line.strip()

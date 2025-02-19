@@ -46,7 +46,7 @@ class FileParser:
 
   def read_file_content(self, migration_file: str) -> tuple[str, str, str] | None:
     filename = path.basename(migration_file)
-    with open(migration_file, 'r') as file:
+    with open(migration_file, "r") as file:
       migration_yml = file.read()
 
     if not migration_yml:
@@ -76,5 +76,5 @@ class FileParser:
 
   def calculate_file_content_hash(self) -> str:
     hash_obj = md5()
-    hash_obj.update(self.raw_file_content.encode('utf-8'))
+    hash_obj.update(self.raw_file_content.encode("utf-8"))
     return hash_obj.hexdigest()

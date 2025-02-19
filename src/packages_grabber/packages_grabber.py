@@ -58,7 +58,7 @@ class PackagesGrabber:
     if not packages:
       return 0
     link_creator = self.extractor.determinate_package_link
-    values = ','.join(f"('{name}','{link_creator(name)}',{self.project_id})" for name in packages)
+    values = ",".join(f"('{name}','{link_creator(name)}',{self.project_id})" for name in packages)
     query = text(f"INSERT INTO project_packages (name, link, project_id) VALUES {values}")
     result = self.connection.execute(query)
     return result.rowcount
