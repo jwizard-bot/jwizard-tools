@@ -21,7 +21,6 @@ class VaultClient:
       info(f"Authenticated to Vault server.")
     except Exception as e:
       error(f"Unable authenticate to Vault server. Cause: {e}.")
-      info("Finished.")
       exit(1)
 
   def get_secrets(self, kv_backend: str, path: str):
@@ -30,5 +29,4 @@ class VaultClient:
       return response["data"]
     except Exception as e:
       error(f"Unable to find KV storage: \"{path}\". Cause: {e}.")
-      info("Finished.")
       exit(1)
