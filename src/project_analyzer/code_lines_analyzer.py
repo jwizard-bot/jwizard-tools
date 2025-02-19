@@ -45,7 +45,8 @@ class CodeLinesAnalyzer:
       ".editorconfig",
       ".env",
       ".gitignore",
-      ".md"
+      ".md",
+      ".iml",
     }
 
   def _extract_ext_with_stats(self):
