@@ -1,11 +1,6 @@
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/workspace.xml
-.idea/libraries/
-.idea/discord.xml
-
+.idea/
 .venv/
 src/**/__pycache__
+
 .env
 .temp

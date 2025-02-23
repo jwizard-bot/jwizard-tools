@@ -1,9 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Grab packages (Lib)" type="PythonConfigurationType" factoryName="Python" folderName="Packages grabber">
+  <configuration default="false" name="Grab packages (Core)" type="PythonConfigurationType" factoryName="Python" folderName="Packages grabber">
     <module name="jwizard-tools" />
     <option name="ENV_FILES" value="$PROJECT_DIR$/.env" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
     <option name="SDK_HOME" value="" />
     <option name="SDK_NAME" value="Python 3.13 (jwizard-tools)" />
     <option name="WORKING_DIRECTORY" value="D:\programming-projects\jwizard\jwizard-tools" />
@@ -11,7 +14,7 @@
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <option name="SCRIPT_NAME" value="src/packages_grabber.py" />
-    <option name="PARAMETERS" value="--repo jwizard-bot/jwizard-lib" />
+    <option name="PARAMETERS" value="--repo jwizard-bot/jwizard-core" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

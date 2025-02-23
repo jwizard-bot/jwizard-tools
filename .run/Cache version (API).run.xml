@@ -1,9 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Cache version (Core)" type="PythonConfigurationType" factoryName="Python" folderName="Cache version">
+  <configuration default="false" name="Cache version (API)" type="PythonConfigurationType" factoryName="Python" folderName="Cache version">
     <module name="jwizard-tools" />
     <option name="ENV_FILES" value="$PROJECT_DIR$/.env" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
     <option name="SDK_HOME" value="" />
     <option name="SDK_NAME" value="Python 3.13 (jwizard-tools)" />
     <option name="WORKING_DIRECTORY" value="D:\programming-projects\jwizard\jwizard-tools" />
@@ -11,7 +14,7 @@
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <option name="SCRIPT_NAME" value="src/cache_version.py" />
-    <option name="PARAMETERS" value="--repo jwizard-bot/jwizard-core" />
+    <option name="PARAMETERS" value="--repo jwizard-bot/jwizard-api" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />
