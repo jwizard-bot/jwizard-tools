@@ -2,9 +2,9 @@
 
 [[About project](https://jwizard.pl/about)]
 
-JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
-player. This repository contains scripts that automate operations in the CI/CD pipelines of other JWizard projects, as
-well as standalone scripts used in various JWizard projects.
+JWizard is an open-source Discord music bot handling audio content from various multimedia sources
+with innovative web player. This repository contains scripts that automate operations in the CI/CD
+pipelines of other JWizard projects, as well as standalone scripts used in various JWizard projects.
 
 ## Table of content
 
@@ -58,10 +58,10 @@ $ source .venv/bin/activate
 ```
 
 > NOTE: If you have an execution policy error, try execute
-> `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser` in PowerShell.
+`Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser` in PowerShell.
 
-> NOTE: If you don't have `bin` directory, change path to `.venv/Scripts/activate` and `.\.venv\Scripts\Activate.ps1`
-> for UNIX and Windows environments respectively.
+> NOTE: If you don't have `bin` directory, change path to `.venv/Scripts/activate` and
+`.\.venv\Scripts\Activate.ps1` for UNIX and Windows environments respectively.
 
 6. Install project-related dependencies via:
 
@@ -75,9 +75,11 @@ $ (venv) pip install -r requirements.txt
 $ (venv) python src/<project name>.py <arguments>
 ```
 
-Where `<project name>` is name of the project (defined in *name* column in **Project modules** table).
+Where `<project name>` is name of the project (defined in *name* column in **Project modules**
+table).
 
-> NOTE: If `python` command not working in UNIX-like shells (ex. ZSH), try run via `python3` command.
+> NOTE: If `python` command not working in UNIX-like shells (ex. ZSH), try run via `python3`
+> command.
 
 ### Alternative, only for UNIX environments:
 
@@ -100,7 +102,8 @@ $ exec/prepare
 $ exec/run <project name> <additional arguments>
 ```
 
-Where `<project name>` is name of the project (defined in *name* column in **Project modules** table).
+Where `<project name>` is name of the project (defined in *name* column in **Project modules**
+table).
 
 ## Create migration
 
@@ -114,31 +117,40 @@ $ exec/create-migration <migration name> <pipeline> <author>
 where:
 
 * `<migration name>` is the self descriptive name of the migration file,
-* `<pipeline>` is one of the migration base directory (see `--pipeline` argument for `db_migrator` project),
-* `<author` is migration author persisted in DB. By default, gets author from git property `user.name`. Not required.
+* `<pipeline>` is one of the migration base directory (see `--pipeline` argument for `db_migrator`
+  project),
+* `<author` is migration author persisted in DB. By default, gets author from git property
+  `user.name`. Not required.
 
-This script will automatically created new migration template with current date, incremented migration number and base
-migration script copied from `migrations/template.yml` file.
+This script will automatically created new migration template with current date, incremented
+migration number and base migration script copied from `migrations/template.yml` file.
 
 ## Project arguments
 
 * For `packages_grabber` project:
 
 ```js
---repo (required)     // Github repository name and organization: owner/name.
+--repo(required)     // Github repository name and organization: owner/name.
 ```
 
 * For `db_migrator` project:
 
 ```js
---pipeline (required) // Determine from which directory migrator execute migrations (take: 'infra' and 'self').
-                      // Used for separate migration executions for JWizard Tools and JWizard Infra (Core and API).
+--pipeline(required) // Determine from which directory migrator execute migrations (take: 'infra'
+                     // and 'self'). Used for separate migration executions for JWizard Tools and
+                     // JWizard Infra (Core and API).
 ```
 
 * For `cache_version` project:
 
 ```js
---repo (required)     // Github repository name and organization: owner/name.
+--repo(required)     // Github repository name and organization: owner/name.
+```
+
+* For `project_analyzer` project:
+
+```js
+--repo(required)     // Github repository name and organization: owner/name.
 ```
 
 ## License
