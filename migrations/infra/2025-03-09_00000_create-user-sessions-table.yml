@@ -1,0 +1,23 @@
+author: milosz08
+
+sql: |
+  CREATE TABLE IF NOT EXISTS user_sessions (
+    session_id BINARY(32) NOT NULL,
+
+    user_snowflake BIGINT NOT NULL,
+    access_token VARCHAR(255) NOT NULL,
+    refresh_token VARCHAR(255) NOT NULL,
+    token_expired_at_utc DATETIME NOT NULL,
+    session_expired_at_utc DATETIME NOT NULL,
+    last_login_utc DATETIME NOT NULL,
+    device_system VARCHAR(255) DEFAULT NULL,
+    device_mobile BOOL DEFAULT NULL,
+    geolocation_info VARCHAR(255) DEFAULT NULL,
+    csrf_token VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (session_id)
+  )
+  ENGINE=InnoDB;
+
+rollback: |
+  DROP TABLE IF EXISTS user_sessions;
