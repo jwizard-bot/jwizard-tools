@@ -57,11 +57,13 @@ $ source .venv/bin/activate
 .\.venv\bin\Activate.ps1
 ```
 
-> NOTE: If you have an execution policy error, try execute
-`Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser` in PowerShell.
+> [!TIP]
+> If you have an execution policy error, try to execute
+> `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser` in PowerShell.
 
-> NOTE: If you don't have `bin` directory, change path to `.venv/Scripts/activate` and
-`.\.venv\Scripts\Activate.ps1` for UNIX and Windows environments respectively.
+> [!TIP]
+> If you don't have `bin` directory, change path to `.venv/Scripts/activate` and
+> `.\.venv\Scripts\Activate.ps1` for UNIX and Windows environments respectively.
 
 6. Install project-related dependencies via:
 
@@ -78,8 +80,8 @@ $ (venv) python src/<project name>.py <arguments>
 Where `<project name>` is name of the project (defined in *name* column in **Project modules**
 table).
 
-> NOTE: If `python` command not working in UNIX-like shells (ex. ZSH), try run via `python3`
-> command.
+> [!TIP]
+> If `python` command not working in UNIX-like shells (ex. ZSH), try run via `python3` command.
 
 ### Alternative, only for UNIX environments:
 
