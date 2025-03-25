@@ -53,8 +53,8 @@ class PackagesExtractor(ABC):
 
   @abstractmethod
   def _extract_packages(self, raw_format: str):
-    pass
+    raise Exception("Method \"_extract_packages\" not implemented.")
 
   @abstractmethod
   def determinate_package_link(self, package_name: str) -> str:
-    pass
+    raise Exception("Method \"determinate_package_link\" not implemented.")
