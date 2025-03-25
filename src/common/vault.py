@@ -6,11 +6,11 @@ from hvac import Client
 
 class VaultClient:
   def __init__(self):
-    token = getenv("ENV_VAULT_TOKEN")
+    self.token = getenv("ENV_VAULT_TOKEN")
     address = getenv("JWIZARD_VAULT_SERVER", "http://localhost:8761")
     try:
-      if token is not None:
-        self.client = Client(url=address, token=token)
+      if self.token is not None:
+        self.client = Client(url=address, token=self.token)
       else:
         self.client = Client(url=address)
         self.client.auth.userpass.login(
@@ -32,5 +32,6 @@ class VaultClient:
       exit(1)
 
   def revoke_access(self):
-    self.client.auth.token.revoke_self()
-    info(f"Revoked Vault server token.")
+    if self.token is not None:
+      self.client.auth.token.revoke_self()
+      info(f"Revoked Vault server token.")
