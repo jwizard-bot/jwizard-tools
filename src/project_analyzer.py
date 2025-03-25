@@ -49,6 +49,7 @@ def main():
     if repo_downloader:
       repo_downloader.clean_repo_content()  # clean temp files
     connection.close()
+    vault_client.revoke_access()
 
   info("Finished.")
 

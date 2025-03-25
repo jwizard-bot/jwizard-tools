@@ -50,6 +50,7 @@ def main():
 
   finally:
     connection.close()
+    vault_client.revoke_access()
 
   info("Finished.")
 

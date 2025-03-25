@@ -30,3 +30,7 @@ class VaultClient:
     except Exception as e:
       error(f"Unable to find KV storage: \"{path}\". Cause: {e}.")
       exit(1)
+
+  def revoke_access(self):
+    self.client.auth.token.revoke_self()
+    info(f"Revoked Vault server token.")
