@@ -49,7 +49,7 @@ class ProcessManager:
     process_exists = self._check_if_process_exists(name)
     # restart, if proces already exists
     if process_exists:
-      process_cmd = f"{self.env_command} {self.manager_command} restart {name} --silent"
+      process_cmd = f"{self.env_command} && {self.manager_command} restart {name} --silent"
     else:
       spawn_cmd = [
         f"{self.env_command} &&"
@@ -74,5 +74,5 @@ class ProcessManager:
       process_cmd = " ".join(spawn_cmd)
 
     self._perform_command(process_cmd)
-    self._perform_command(f"{self.env_command} save")  # dump process
+    self._perform_command(f"{self.env_command} && {self.manager_command} save")  # dump process
     return process_exists
