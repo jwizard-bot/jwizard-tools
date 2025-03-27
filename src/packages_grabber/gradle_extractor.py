@@ -1,6 +1,6 @@
 from toml import loads as loads_tom
 
-from packages_extractor import PackagesExtractor
+from .packages_extractor import PackagesExtractor
 
 
 class GradlePackagesExtractor(PackagesExtractor):

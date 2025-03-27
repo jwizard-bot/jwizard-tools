@@ -1,4 +1,4 @@
-from ssh_scp_client import SshScpClient
+from .ssh_scp_client import SshScpClient
 
 
 class ProcessDefinition:

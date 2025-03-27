@@ -4,8 +4,8 @@ from math import ceil
 from os import getenv
 
 from common.vault import VaultClient
-from process_manager import ProcessManager, ProcessDefinition
-from ssh_scp_client import SshScpClient
+from .process_manager import ProcessManager, ProcessDefinition
+from .ssh_scp_client import SshScpClient
 
 
 def _get_output_path_prefix() -> str:

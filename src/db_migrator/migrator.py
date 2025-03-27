@@ -4,7 +4,7 @@ from os import path, sep
 
 from sqlalchemy import Connection, text
 
-from file_parser import FileParser, extract_subqueries
+from .file_parser import FileParser, extract_subqueries
 
 
 class Migrator:

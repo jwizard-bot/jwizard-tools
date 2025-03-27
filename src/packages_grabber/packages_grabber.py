@@ -2,10 +2,10 @@ from logging import info
 
 from sqlalchemy import Connection, text
 
-from gradle_extractor import GradlePackagesExtractor
-from node_extractor import NodePackagesExtractor
-from packages_extractor import PackagesExtractor
-from pip_extractor import PipPackagesExtractor
+from .gradle_extractor import GradlePackagesExtractor
+from .node_extractor import NodePackagesExtractor
+from .packages_extractor import PackagesExtractor
+from .pip_extractor import PipPackagesExtractor
 
 
 class PackagesGrabber:
