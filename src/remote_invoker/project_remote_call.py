@@ -41,7 +41,7 @@ class ProjectRemoteCall(ABC):
     info(f"Defined: {len(processes)} processes: \"{processes}\".")
 
     # create local archive
-    # archive_name = self.ssh_scp_client.archive_directory(self.input_path)
+    archive_name = self.ssh_scp_client.archive_directory(self.input_path)
 
     for process in processes:
       name = process.process_name
@@ -54,7 +54,7 @@ class ProjectRemoteCall(ABC):
         info(f"[REMOTE] Process: \"{name}\" was not killed.")
 
     # clean previous files and move files to remote server
-    # self.ssh_scp_client.move_archive_to_remote(archive_name, self.output_path)
+    self.ssh_scp_client.move_archive_to_remote(archive_name, self.output_path)
 
     for process in processes:
       name = process.process_name
