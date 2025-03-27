@@ -18,9 +18,11 @@ pipelines of other JWizard projects, as well as standalone scripts used in vario
 
 | Name             | Description                                                                                |
 |------------------|--------------------------------------------------------------------------------------------|
-| packages_grabber | Parsing and persisting packages used in all JWizard projects.                              |
-| db_migrator      | Database migrator framework, modifying structure and data via YAML files with SQL content. |
 | cache_version    | Update deployment cache (project version and time) in DB.                                  |
+| db_migrator      | Database migrator framework, modifying structure and data via YAML files with SQL content. |
+| packages_grabber | Parsing and persisting packages used in all JWizard projects.                              |
+| project_analyzer | Statistical analysis of repo (count of files, count of all lines, etc.).                   |
+| remote_invoker   | Deploy, spawn/kill processes on remote hosts (used in CI/CD pipelines).                    |
 
 ## Clone and install
 
@@ -43,6 +45,7 @@ JWIZARD_SSH_USERNAME=<SSH username>
 JWIZARD_SSH_KEY=<SSH private key, as raw string without any \n or \r characters>
 JWIZARD_SSH_PASSPHRASE=<SSH key passphrase (required keys with passphrase)>
 JWIZARD_SSH_OUTPUT_PATH_PREFIX=<prefix, where located artifacts on remote server>
+JWIZARD_APP_CONFIG_FILE_CONTENT=<optional, config file content adding to executable process>
 ```
 
 4. Prepare Python virtual environment via:

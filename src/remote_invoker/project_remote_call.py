@@ -31,7 +31,7 @@ class ProjectRemoteCall(ABC):
     info(f"Staring remote call on \"{process_name}\".")
 
     # create config file, if config is defined
-    config_file_content = getenv("APP_CONFIG_FILE_CONTENT")
+    config_file_content = getenv("JWIZARD_APP_CONFIG_FILE_CONTENT")
     if config_file_content:
       with open(f"{self.input_path}/.env", "w") as env_file:
         env_file.write(config_file_content.strip())
