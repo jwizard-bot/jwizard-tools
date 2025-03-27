@@ -9,3 +9,4 @@ def init_logger():
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[StreamHandler(stdout)]
   )
+  logging.getLogger("paramiko").setLevel(logging.CRITICAL)

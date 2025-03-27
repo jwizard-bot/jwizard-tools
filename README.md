@@ -34,7 +34,15 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 3. Create `.env` file based `example.env` with following properties:
 
 ```properties
-ENV_VAULT_TOKEN=<token>
+JWIZARD_VAULT_TOKEN=<token>
+JWIZARD_PROXY_VERIFICATION_TOKEN=<proxy server verification token (prevent JS challenge)>
+# only for remote_invoker.py script
+JWIZARD_SSH_HOST=<SSH host (or ip address)>
+JWIZARD_SSH_PORT=<SSH port>
+JWIZARD_SSH_USERNAME=<SSH username>
+JWIZARD_SSH_KEY=<SSH private key, as raw string without any \n or \r characters>
+JWIZARD_SSH_PASSPHRASE=<SSH key passphrase (required keys with passphrase)>
+JWIZARD_SSH_OUTPUT_PATH_PREFIX=<prefix, where located artifacts on remote server>
 ```
 
 4. Prepare Python virtual environment via:
@@ -131,28 +139,35 @@ migration number and base migration script copied from `migrations/template.yml`
 
 * For `packages_grabber` project:
 
-```js
---repo(required)     // Github repository name and organization: owner/name.
+```
+--repo      (required)     // Github repository name and organization: owner/name.
 ```
 
 * For `db_migrator` project:
 
-```js
---pipeline(required) // Determine from which directory migrator execute migrations (take: 'infra'
-                     // and 'self'). Used for separate migration executions for JWizard Tools and
-                     // JWizard Infra (Core and API).
+```
+--pipeline  (required)    // Determine from which directory migrator execute migrations (take: 'infra'
+                          // and 'self'). Used for separate migration executions for JWizard Tools and
+                          // JWizard Infra (Core and API).
 ```
 
 * For `cache_version` project:
 
-```js
---repo(required)     // Github repository name and organization: owner/name.
+```
+--repo      (required)    // Github repository name and organization: owner/name.
 ```
 
 * For `project_analyzer` project:
 
-```js
---repo(required)     // Github repository name and organization: owner/name.
+```
+--repo      (required)    // Github repository name and organization: owner/name.
+```
+
+* For `remote_invoker` project:
+
+```
+--name      (required)    // Project identificator (without "jwizard" prefix).
+--inputDir  (required)    // Input directory with pre-compiled files.
 ```
 
 ## License

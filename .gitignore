@@ -1,5 +1,6 @@
 .idea/
 .venv/
+output/
 src/**/__pycache__
 
 .env
