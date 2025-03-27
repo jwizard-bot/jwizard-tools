@@ -1,4 +1,4 @@
-from .packages_extractor import PackagesExtractor
+from packages_extractor import PackagesExtractor
 
 
 class NodePackagesExtractor(PackagesExtractor):

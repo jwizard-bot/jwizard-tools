@@ -1,6 +1,6 @@
 from re import compile as regex_compile
 
-from .packages_extractor import PackagesExtractor
+from packages_extractor import PackagesExtractor
 
 
 class PipPackagesExtractor(PackagesExtractor):
