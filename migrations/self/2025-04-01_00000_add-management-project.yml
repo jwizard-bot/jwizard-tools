@@ -1,0 +1,8 @@
+author: milosz08
+
+sql: |
+  INSERT INTO projects (id, name, parser_id) VALUES
+  (6, 'jwizard-management', 1);
+
+rollback: |
+  DELETE FROM projects WHERE id = 6;
