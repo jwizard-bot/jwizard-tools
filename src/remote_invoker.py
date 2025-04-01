@@ -6,10 +6,11 @@ from dotenv import load_dotenv
 from common.header import print_header
 from common.logger import init_logger
 from remote_invoker.project_remote_call import (
-  CoreProjectRemoteCall,
   ApiProjectRemoteCall,
-  LandingPageProjectRemoteCall,
+  CoreProjectRemoteCall,
   DashboardPageProjectRemoteCall,
+  LandingPageProjectRemoteCall,
+  ManagementProjectRemoteCall,
 )
 
 init_logger()
@@ -28,10 +29,11 @@ def main():
 
   try:
     projects_remote_call = {
-      "core": CoreProjectRemoteCall,
       "api": ApiProjectRemoteCall,
-      "landing-page": LandingPageProjectRemoteCall,
+      "core": CoreProjectRemoteCall,
       "dashboard": DashboardPageProjectRemoteCall,
+      "landing-page": LandingPageProjectRemoteCall,
+      "management": ManagementProjectRemoteCall,
     }
     project_remote_call = projects_remote_call.get(args.name, None)(input_path=args.inputDir)
     project_remote_call.perform_call()

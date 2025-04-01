@@ -72,6 +72,33 @@ class ProjectRemoteCall(ABC):
     raise Exception("Method \"_run_process\" not implemented.")
 
 
+class JavaProjectRemoteCall(ProjectRemoteCall):
+  def __init__(self, input_path: str, output_path: str):
+    super().__init__(input_path, output_path_suffix=output_path)
+    self.output_path = output_path
+    self.secrets = self.vault_client.get_secrets(kv_backend="jwizard", path=output_path)
+
+  def _define_processes(self, process_name: str) -> list[ProcessDefinition]:
+    server_port = self.secrets["V_SERVER_PORT"]
+    java_xms = self.secrets["V_JAVA_XMS"]
+    java_xmx = self.secrets["V_JAVA_XMX"]
+    args = [
+      f"-Xms{java_xms} -Xmx{java_xmx}",
+      "-Druntime.profiles=prod",
+      f"-Dserver.port={server_port}",
+      "-Denv.enabled=true",
+      f"-jar jwizard-{self.output_path}.jar"
+    ]
+    return [
+      ProcessDefinition(
+        process_name=process_name,
+        args=args,
+        script="/usr/bin/java",
+        withoutInterpreter=True
+      )
+    ]
+
+
 class CoreProjectRemoteCall(ProjectRemoteCall):
   def __init__(self, input_path: str):
     super().__init__(input_path, output_path_suffix="core")
@@ -113,30 +140,14 @@ class CoreProjectRemoteCall(ProjectRemoteCall):
     return processes
 
 
-class ApiProjectRemoteCall(ProjectRemoteCall):
+class ApiProjectRemoteCall(JavaProjectRemoteCall):
   def __init__(self, input_path: str):
-    super().__init__(input_path, output_path_suffix="api")
-    self.secrets = self.vault_client.get_secrets(kv_backend="jwizard", path="api")
+    super().__init__(input_path, output_path="api")
 
-  def _define_processes(self, process_name: str) -> list[ProcessDefinition]:
-    server_port = self.secrets["V_SERVER_PORT"]
-    java_xms = self.secrets["V_JAVA_XMS"]
-    java_xmx = self.secrets["V_JAVA_XMX"]
-    args = [
-      f"-Xms{java_xms} -Xmx{java_xmx}",
-      "-Druntime.profiles=prod",
-      f"-Dserver.port={server_port}",
-      "-Denv.enabled=true",
-      "-jar jwizard-api.jar"
-    ]
-    return [
-      ProcessDefinition(
-        process_name=process_name,
-        args=args,
-        script="/usr/bin/java",
-        withoutInterpreter=True
-      )
-    ]
+
+class ManagementProjectRemoteCall(JavaProjectRemoteCall):
+  def __init__(self, input_path: str):
+    super().__init__(input_path, output_path="management")
 
 
 class LandingPageProjectRemoteCall(ProjectRemoteCall):
