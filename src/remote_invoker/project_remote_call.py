@@ -73,10 +73,10 @@ class ProjectRemoteCall(ABC):
 
 
 class JavaProjectRemoteCall(ProjectRemoteCall):
-  def __init__(self, input_path: str, output_path: str):
-    super().__init__(input_path, output_path_suffix=output_path)
-    self.output_path = output_path
-    self.secrets = self.vault_client.get_secrets(kv_backend="jwizard", path=output_path)
+  def __init__(self, input_path: str, output_name: str):
+    super().__init__(input_path, output_path_suffix=output_name)
+    self.output_name = output_name
+    self.secrets = self.vault_client.get_secrets(kv_backend="jwizard", path=output_name)
 
   def _define_processes(self, process_name: str) -> list[ProcessDefinition]:
     server_port = self.secrets["V_SERVER_PORT"]
@@ -87,7 +87,7 @@ class JavaProjectRemoteCall(ProjectRemoteCall):
       "-Druntime.profiles=prod",
       f"-Dserver.port={server_port}",
       "-Denv.enabled=true",
-      f"-jar jwizard-{self.output_path}.jar"
+      f"-jar jwizard-{self.output_name}.jar"
     ]
     return [
       ProcessDefinition(
@@ -142,12 +142,12 @@ class CoreProjectRemoteCall(ProjectRemoteCall):
 
 class ApiProjectRemoteCall(JavaProjectRemoteCall):
   def __init__(self, input_path: str):
-    super().__init__(input_path, output_path="api")
+    super().__init__(input_path, output_name="api")
 
 
 class ManagementProjectRemoteCall(JavaProjectRemoteCall):
   def __init__(self, input_path: str):
-    super().__init__(input_path, output_path="management")
+    super().__init__(input_path, output_name="management")
 
 
 class LandingPageProjectRemoteCall(ProjectRemoteCall):
