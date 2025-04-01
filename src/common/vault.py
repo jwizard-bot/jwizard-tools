@@ -17,7 +17,7 @@ class JsonProxyAdapter(JSONAdapter):
 
 class VaultClient:
   def __init__(self):
-    self.token = getenv("ENV_VAULT_TOKEN")
+    self.token = getenv("JWIZARD_VAULT_TOKEN")
     address = getenv("JWIZARD_VAULT_SERVER", "http://localhost:8761")
     try:
       if self.token is not None:
