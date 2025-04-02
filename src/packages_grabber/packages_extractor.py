@@ -23,8 +23,8 @@ class PackagesExtractor(ABC):
     self.base_url = None
 
   def _fetch_raw_content(self) -> str:
-    full_path = f"{self.root_dir}/{self.file_path}"
-    url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}{full_path}"
+    full_path = f"{self.root_dir}{self.file_path}"
+    url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}/{full_path}"
     response = request_get(url)
     if response.status_code != 200:
       raise Exception(f"Unable to find packages file for \"{full_path}\".")

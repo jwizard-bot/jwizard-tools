@@ -28,11 +28,11 @@ class PackagesGrabber:
       SELECT s.id, s.packages_md5, pp.name FROM subprojects s
       INNER JOIN package_parsers pp ON pp.id = s.parser_id
       INNER JOIN projects p ON p.id = s.project_id
-      WHERE p.name = :project_name AND s.root_dir IS :root_dir
+      WHERE p.name = :project_name AND s.root_dir = :root_dir
     """)
     result = self.connection.execute(query, parameters={
       "project_name": self.repo.split("/")[1],
-      "root_dir": None if self.root_dir == "/" else self.root_dir,
+      "root_dir": self.root_dir,
     })
     row = result.fetchone()
     if row:
@@ -44,7 +44,7 @@ class PackagesGrabber:
     extractor: PackagesExtractor = self.extractors.get(self.provider, None)(
       repo_name=self.repo,
       branch="master",
-      root_dir=self.root_dir,
+      root_dir=f"{self.root_dir}/" if self.root_dir != "/" else self.root_dir,
     )
     if not extractor:
       raise Exception(f"Unexpected extractor provider: \"{self.provider}\".")
