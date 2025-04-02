@@ -57,6 +57,6 @@ class VaultClient:
       exit(1)
 
   def revoke_access(self):
-    if self.token is not None:
+    if self.token is None:
       self.client.auth.token.revoke_self()
       info(f"Revoked Vault server token.")
