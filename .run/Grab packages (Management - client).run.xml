@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Grab packages (Management)" type="PythonConfigurationType" factoryName="Python" folderName="Packages grabber">
+  <configuration default="false" name="Grab packages (Management - client)" type="PythonConfigurationType" factoryName="Python" folderName="Packages grabber">
     <module name="jwizard-tools" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
@@ -25,7 +25,7 @@
       </ENTRIES>
     </EXTENSION>
     <option name="SCRIPT_NAME" value="src/packages_grabber.py" />
-    <option name="PARAMETERS" value="--repo jwizard-bot/jwizard-management" />
+    <option name="PARAMETERS" value="--repo jwizard-bot/jwizard-management --dir jwm-client" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

@@ -4,8 +4,8 @@ from .packages_extractor import PackagesExtractor
 
 
 class GradlePackagesExtractor(PackagesExtractor):
-  def __init__(self, repo_name: str, branch: str):
-    super().__init__(repo_name, branch, file_path="gradle/libs.versions.toml")
+  def __init__(self, repo_name: str, branch: str, root_dir: str):
+    super().__init__(repo_name, branch, root_dir, file_path="gradle/libs.versions.toml")
 
   def _extract_packages(self, raw_content):
     parsed_content = loads_tom(raw_content)

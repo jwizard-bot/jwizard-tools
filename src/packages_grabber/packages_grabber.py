@@ -9,10 +9,11 @@ from .pip_extractor import PipPackagesExtractor
 
 
 class PackagesGrabber:
-  def __init__(self, connection: Connection, repo: str):
+  def __init__(self, connection: Connection, repo: str, root_dir: str):
     self.connection = connection
     self.repo = repo
-    self.project_id = None
+    self.root_dir = root_dir
+    self.subproject_id = None
     self.packages_md5 = None
     self.provider = None
     self.extractor = None
@@ -24,23 +25,26 @@ class PackagesGrabber:
 
   def _extract_project_parser_provider(self):
     query = text("""
-      SELECT p.id, p.packages_md5, ps.name FROM package_parsers ps
-      INNER JOIN projects p ON p.parser_id = ps.id
-      WHERE p.name = :project_name
+      SELECT s.id, s.packages_md5, pp.name FROM subprojects s
+      INNER JOIN package_parsers pp ON pp.id = s.parser_id
+      INNER JOIN projects p ON p.id = s.project_id
+      WHERE p.name = :project_name AND s.root_dir IS :root_dir
     """)
     result = self.connection.execute(query, parameters={
       "project_name": self.repo.split("/")[1],
+      "root_dir": None if self.root_dir == "/" else self.root_dir,
     })
     row = result.fetchone()
     if row:
-      self.project_id = int(row[0])
+      self.subproject_id = int(row[0])
       self.packages_md5 = str(row[1])
       self.provider = str(row[2])
 
   def _determinate_extractor(self):
     extractor: PackagesExtractor = self.extractors.get(self.provider, None)(
       repo_name=self.repo,
-      branch="master"
+      branch="master",
+      root_dir=self.root_dir,
     )
     if not extractor:
       raise Exception(f"Unexpected extractor provider: \"{self.provider}\".")
@@ -48,9 +52,9 @@ class PackagesGrabber:
     self.extractor = extractor
 
   def _find_already_persisted_packages(self) -> list[str]:
-    query = text("SELECT name FROM project_packages WHERE project_id = :project_id")
+    query = text("SELECT name FROM project_packages WHERE subproject_id = :subproject_id")
     result = self.connection.execute(query, parameters={
-      "project_id": self.project_id,
+      "subproject_id": self.subproject_id,
     })
     return [row[0] for row in result.fetchall()]
 
@@ -58,29 +62,35 @@ class PackagesGrabber:
     if not packages:
       return 0
     link_creator = self.extractor.determinate_package_link
-    values = ",".join(f"('{name}','{link_creator(name)}',{self.project_id})" for name in packages)
-    query = text(f"INSERT INTO project_packages (name, link, project_id) VALUES {values}")
+    values = ",".join(
+      f"('{name}','{link_creator(name)}',{self.subproject_id})" for name in packages
+    )
+    query = text(f"INSERT INTO project_packages (name, link, subproject_id) VALUES {values}")
     result = self.connection.execute(query)
     return result.rowcount
 
   def _drop_packages(self, packages: list[str]):
     if not packages:
       return 0
-    query = text(f"DELETE FROM project_packages WHERE project_id = :project_id AND name IN :names")
+    query = text(f"""
+      DELETE FROM project_packages WHERE subproject_id = :subproject_id AND name IN :names
+    """)
     result = self.connection.execute(query, parameters={
-      "project_id": self.project_id,
+      "subproject_id": self.subproject_id,
       "names": tuple(packages),
     })
     return result.rowcount
 
   def _update_packages_md5(self):
-    query = text("UPDATE projects SET packages_md5 = :packages_md5 WHERE id = :project_id")
+    query = text("UPDATE subprojects SET packages_md5 = :packages_md5 WHERE id = :subproject_id")
     self.connection.execute(query, parameters={
       "packages_md5": self.extractor.packages_md5,
-      "project_id": self.project_id,
+      "subproject_id": self.subproject_id,
     })
 
   def grab_and_persist_packages(self) -> tuple[int, int]:
+    info(f"Init packages grabber for subproject with root dir: \"{self.root_dir}\".")
+
     self._extract_project_parser_provider()
 
     self._determinate_extractor()

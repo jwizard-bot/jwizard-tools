@@ -13,21 +13,23 @@ def calculate_md5(raw_content) -> str:
 
 
 class PackagesExtractor(ABC):
-  def __init__(self, repo_name: str, branch: str, file_path: str):
+  def __init__(self, repo_name: str, branch: str, root_dir: str, file_path: str):
     self.repo_name = repo_name
     self.branch = branch
+    self.root_dir = root_dir
     self.file_path = file_path
     self.packages = []
     self.packages_md5 = None
     self.base_url = None
 
   def _fetch_raw_content(self) -> str:
-    url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}/{self.file_path}"
+    full_path = f"{self.root_dir}/{self.file_path}"
+    url = f"https://raw.githubusercontent.com/{self.repo_name}/{self.branch}{full_path}"
     response = request_get(url)
     if response.status_code != 200:
-      raise Exception("Unable to find packages file.")
+      raise Exception(f"Unable to find packages file for \"{full_path}\".")
 
-    info(f"Download packages file: {self.file_path} from: {self.repo_name}.")
+    info(f"Download packages file: {full_path} from: {self.repo_name}.")
     return response.text
 
   def extract_and_parse(self, db_md5: str | None):

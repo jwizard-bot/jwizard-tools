@@ -144,6 +144,7 @@ migration number and base migration script copied from `migrations/template.yml`
 
 ```
 --repo      (required)     // Github repository name and organization: owner/name.
+--dir       (not required) // Running repository directory (by default "/" - root directory)
 ```
 
 * For `db_migrator` project:

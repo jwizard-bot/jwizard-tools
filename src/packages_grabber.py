@@ -18,6 +18,7 @@ def main():
 
   arg_parser = ArgumentParser()
   arg_parser.add_argument("--repo", type=str, required=True)
+  arg_parser.add_argument("--dir", type=str, required=False, default="/")
   args = arg_parser.parse_args()
 
   vault_client = VaultClient()
@@ -28,7 +29,7 @@ def main():
   transaction = connection.begin()
 
   try:
-    packages_grabber = PackagesGrabber(connection, args.repo)
+    packages_grabber = PackagesGrabber(connection, args.repo, args.dir)
     persisted_in_db, dropped_from_db = packages_grabber.grab_and_persist_packages()
 
     transaction.commit()

@@ -4,8 +4,8 @@ from .packages_extractor import PackagesExtractor
 
 
 class PipPackagesExtractor(PackagesExtractor):
-  def __init__(self, repo_name: str, branch: str):
-    super().__init__(repo_name, branch, file_path="requirements.txt")
+  def __init__(self, repo_name: str, branch: str, root_dir: str):
+    super().__init__(repo_name, branch, root_dir, file_path="requirements.txt")
 
   def _extract_packages(self, raw_content: str):
     lines = raw_content.strip().splitlines()
