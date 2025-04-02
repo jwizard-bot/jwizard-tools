@@ -2,7 +2,7 @@ from glob import glob
 from hashlib import md5
 from logging import info, warning
 from os import path
-from re import match, sub as re_sub
+from re import match as re_match, search as re_search, sub as re_sub
 from typing import Any
 
 from yaml import safe_load as yaml_load
@@ -19,8 +19,8 @@ def extract_subqueries(query: str) -> list[str]:
   return stripped_queries
 
 
-def lambda_file_sort_key(file_name: str, pattern: str) -> [int, int, int, int]:
-  match_str = match(pattern, file_name)
+def lambda_file_sort_key(file_name: str) -> [int, int, int, int]:
+  match_str = re_search(r'(\d{4})-(\d{2})-(\d{2})_(\d{5})_', file_name)
   if match_str:
     year, month, day, incrementer = match_str.groups()
     return int(year), int(month), int(day), int(incrementer)
@@ -38,11 +38,11 @@ class FileParser:
   def take_migration_files(self) -> list[str]:
     pattern = r"\d{4}-\d{2}-\d{2}_\d{5}_.+\.yml"  # YYYY-MM-dd_XXXXX_[description].yml
     migration_files = glob(path.join(self.base_directory, f"*.yml"))
-    filtered_files = [file for file in migration_files if match(pattern, path.basename(file))]
+    filtered_files = [file for file in migration_files if re_match(pattern, path.basename(file))]
 
     info(f"Found: {len(filtered_files)} migration "
          f"files in: \"{self.base_directory}\" migration scripts directory.")
-    return sorted(filtered_files, key=lambda file_name: lambda_file_sort_key(file_name, pattern))
+    return sorted(filtered_files, key=lambda file_name: lambda_file_sort_key(file_name))
 
   def read_file_content(self, migration_file: str) -> tuple[str, str, str] | None:
     filename = path.basename(migration_file)
