@@ -1,0 +1,36 @@
+author: milosz08
+
+sql: |
+  CREATE TABLE IF NOT EXISTS management_users (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    login VARCHAR(255) NOT NULL,
+    password CHAR(60) NOT NULL,
+    is_admin BOOL NOT NULL DEFAULT false,
+    init_password_changed BOOL NOT NULL DEFAULT false,
+    mfa_secret VARCHAR(64) DEFAULT NULL,
+
+    PRIMARY KEY (id)
+  )
+  ENGINE=InnoDB;
+
+  CREATE TABLE IF NOT EXISTS management_user_sessions (
+    session_id BINARY(32) NOT NULL,
+
+    mfa_passed BOOL DEFAULT NULL,
+    expired_at_utc DATETIME NOT NULL,
+    last_login_utc DATETIME NOT NULL,
+    device_system VARCHAR(255) DEFAULT NULL,
+    device_mobile BOOL DEFAULT NULL,
+    geolocation_info VARCHAR(255) DEFAULT NULL,
+    csrf_token VARCHAR(255) NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES management_users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (session_id)
+  )
+  ENGINE=InnoDB;
+
+rollback: |
+  DROP TABLE IF EXISTS management_users;
+  DROP TABLE IF EXISTS management_user_sessions;

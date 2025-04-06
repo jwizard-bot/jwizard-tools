@@ -150,9 +150,10 @@ migration number and base migration script copied from `migrations/template.yml`
 * For `db_migrator` project:
 
 ```
---pipeline  (required)    // Determine from which directory migrator execute migrations (take: 'infra'
-                          // and 'self'). Used for separate migration executions for JWizard Tools and
-                          // JWizard Infra (Core and API).
+--pipeline  (required)    // Determine from which directory migrator execute migrations (take:
+                          // 'infra', 'self' and 'management'). Used for separate migration
+                          // executions for JWizard Tools, JWizard Infra (Core and API) and JWizard
+                          // management.
 ```
 
 * For `cache_version` project:
