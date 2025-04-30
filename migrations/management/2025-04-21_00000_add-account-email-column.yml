@@ -1,0 +1,9 @@
+author: milosz08
+
+sql: |
+  ALTER TABLE management_users
+  ADD COLUMN email VARCHAR(255) DEFAULT NULL;
+
+rollback: |
+  ALTER TABLE management_users
+  DROP COLUMN email;
