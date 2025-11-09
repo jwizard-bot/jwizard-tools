@@ -13,42 +13,52 @@ on:
 
 jobs:
   run-tools:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, network-access ]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
+      - name: Setup Python
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
 
       - name: Install requirements
-        run: pip install -r requirements.txt
+        run: |
+          source .venv/bin/activate
+          pip install -r requirements.txt
 
       - name: Grand permissions to run packages grabber
         run: chmod +x exec/run-with-config
 
       - name: Run migrator
-        run: exec/run-with-config db_migrator \
-          "${{ secrets.CONFIG_FILE_CONTENT }}" \
-          --pipeline self
+        run: |
+          source .venv/bin/activate
+          exec/run-with-config db_migrator \
+            "${{ secrets.CONFIG_FILE_CONTENT }}" \
+            --pipeline self
 
       - name: Cache version
-        run: exec/run-with-config cache_version \
-          "${{ secrets.CONFIG_FILE_CONTENT }}" \
-          --repo ${{ github.repository }}
+        run: |
+          source .venv/bin/activate
+          exec/run-with-config cache_version \
+            "${{ secrets.CONFIG_FILE_CONTENT }}" \
+            --repo ${{ github.repository }}
 
       - name: Run packages grabber
-        run: exec/run-with-config packages_grabber \
-          "${{ secrets.CONFIG_FILE_CONTENT }}" \
-          --repo ${{ github.repository }}
+        run: |
+          source .venv/bin/activate
+          exec/run-with-config packages_grabber \
+            "${{ secrets.CONFIG_FILE_CONTENT }}" \
+            --repo ${{ github.repository }}
 
       - name: Run project analyzer
-        run: exec/run-with-config project_analyzer \
-          "${{ secrets.CONFIG_FILE_CONTENT }}" \
-          --repo ${{ github.repository }}
+        run: |
+          source .venv/bin/activate
+          exec/run-with-config project_analyzer \
+            "${{ secrets.CONFIG_FILE_CONTENT }}" \
+            --repo ${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
