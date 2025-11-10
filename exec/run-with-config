@@ -11,4 +11,5 @@ for var in "${env_array[@]}"; do
   export "$var"
 done
 
+source .venv/bin/activate
 python3 src/$project_name.py $rest_variables
