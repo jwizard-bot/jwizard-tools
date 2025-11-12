@@ -9,7 +9,6 @@ hvac==2.3.0
 idna==3.10
 markdown-it-py==3.0.0
 mdurl==0.1.2
-paramiko==3.5.1
 pycparser==2.22
 pyfiglet==1.0.2
 Pygments==2.19.1
@@ -18,7 +17,6 @@ python-dotenv==1.0.1
 PyYAML==6.0.2
 requests==2.32.4
 rich==13.9.4
-scp==0.15.0
 SQLAlchemy==2.0.38
 toml==0.10.2
 typing_extensions==4.12.2

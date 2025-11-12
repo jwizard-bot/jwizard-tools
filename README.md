@@ -22,7 +22,6 @@ pipelines of other JWizard projects, as well as standalone scripts used in vario
 | db_migrator      | Database migrator framework, modifying structure and data via YAML files with SQL content. |
 | packages_grabber | Parsing and persisting packages used in all JWizard projects.                              |
 | project_analyzer | Statistical analysis of repo (count of files, count of all lines, etc.).                   |
-| remote_invoker   | Deploy, spawn/kill processes on remote hosts (used in CI/CD pipelines).                    |
 
 ## Clone and install
 
@@ -38,14 +37,6 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 ```properties
 JWIZARD_VAULT_TOKEN=<token>
 JWIZARD_PROXY_VERIFICATION_TOKEN=<proxy server verification token (prevent JS challenge)>
-# only for remote_invoker.py script
-JWIZARD_SSH_HOST=<SSH host (or ip address)>
-JWIZARD_SSH_PORT=<SSH port>
-JWIZARD_SSH_USERNAME=<SSH username>
-JWIZARD_SSH_KEY=<SSH private key, as raw string without any \n or \r characters>
-JWIZARD_SSH_PASSPHRASE=<SSH key passphrase (required keys with passphrase)>
-JWIZARD_SSH_OUTPUT_PATH_PREFIX=<prefix, where located artifacts on remote server>
-JWIZARD_APP_CONFIG_FILE_CONTENT=<optional, config file content adding to executable process>
 ```
 
 4. Prepare Python virtual environment via:
@@ -166,13 +157,6 @@ migration number and base migration script copied from `migrations/template.yml`
 
 ```
 --repo      (required)    // Github repository name and organization: owner/name.
-```
-
-* For `remote_invoker` project:
-
-```
---name      (required)    // Project identificator (without "jwizard" prefix).
---inputDir  (required)    // Input directory with pre-compiled files.
 ```
 
 ## License
